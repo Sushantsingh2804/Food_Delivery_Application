@@ -1,11 +1,11 @@
-deliveryboy=Flask(_name_)
+deliveryboy=Flask(__name__)
 
-@deliveryboy.route("/",methods = ["GET","POST"])
+@deliveryboy.route("/2",methods = ["GET","POST"])
 def deliveryboy_login():
     global result1, result2, a, b
     if request.method == "POST":
-        getEmail = request.form["email"]
-        getPass = request.form["pass"]
+        getemail = request.form["DELIVERYBOY_EMAIL"]
+        getpassword = request.form["DELIVERYBOY_PASSWORD"]
         result1 = connection.execute("SELECT EMAIL FROM DELIVERY_BOY")
         result2 = connection.execute("SELECT PASS FROM DELIVERY_BOY")
         for i in result1:
@@ -15,89 +15,107 @@ def deliveryboy_login():
             print(j[0])
             result2 = j[0]
         if getEmail == result1 and getPass == result2:
-            return redirect('/login')
+            return redirect('/login2')
         else:
             return render_template("deliveryboy_login.html", status=True)
     else:
         return render_template("deliveryboy_login.html", status=False)
 
 
-@deliveryboy.route("/dashboard",methods = ["GET","POST"])
+@deliveryboy.route("/dashboard2",methods = ["GET","POST"])
 def deliveryboy_registration():
     if request.method == "POST":
         getname=request.form["NAME_OF_DELIVERYBOY"]
         getpassword=request.form["DELIVERYBOY_PASSWORD"]
         getaddress=request.form["ADDRESS"]
         getstatus=request.form["DELIVERYBOY_STATUS"]
+        getemail=request.form["DELIVERYBOY_EMAIL"]
         getphone=request.form["DELIVERYBOY_PHONE_NO"]
         getwallet= request.form["DELIVERYBOY_WALLET_BALANCE"]
         print(getname)
         print(getpassword)
         print(getaddress)
         print(getstatus)
+        print(getemail)
         print(getphone)
         print(getwallet)
         try:
-            connection.execute("insert into DELIVERYBOY(NAME_OF_DELIVERYBOY,DELIVERYBOY_PASSWORD,ADDRESS,DELIVERYBOY_STATUS,DELIVERYBOY_PHONE_NO,DELIVERYBOY_WALLET_BALANCE)\
-                               values('" + getname + "','" + getpassword + "','" + getaddress + "','" + getstatus + "'," + getphone + "," + getwallet + ")")
+            connection.execute("insert into DELIVERYBOY(NAME_OF_DELIVERYBOY,DELIVERYBOY_PASSWORD,ADDRESS,DELIVERYBOY_STATUS,DELIVERYBOY_EMAIL,DELIVERYBOY_PHONE_NO,DELIVERYBOY_WALLET_BALANCE)\
+                               values('" + getname + "','" + getpassword + "','" + getaddress + "','" + getstatus + "','" + getemail + "'," + getphone + "," + getwallet + ")")
             connection.commit()
             print("Delivery Boy Data Added Successfully.")
         except Exception as e:
             print("Error occured ", e)
 
-    return render_template("dashboard.html")
+    return render_template("dashboard2.html")
 
-@deliveryboy.route("/viewall")
+@deliveryboy.route("/viewall2")
 def view_deliveryboy():
     cursor=connection.cursor()
     count=cursor.execute("select * from DELIVERYBOY")
     result=cursor.fetchall()
-    return render_template("viewall.html",DELIVERYBOY=result)
+    return render_template("viewall2.html",DELIVERYBOY=result)
 
-@deliveryboy.route("/search",methods = ["GET","POST"])
+@deliveryboy.route("/search2",methods = ["GET","POST"])
 def search_deliveryboy():
     if request.method == "POST":
         getphone=request.form["DELIVERYBOY_PHONE_NO"]
         print(getphone)
         cursor = connection.cursor()
-        count = cursor.execute("select * from DELIVERYBOY where getphone="+getphone)
+        count = cursor.execute("select * from DELIVERYBOY where DELIVERYBOY_PHONE_NO="+getphone)
         result = cursor.fetchall()
-        return render_template("search.html", searchdeliveryboy=result)
+        return render_template("search2.html", searchdeliveryboy=result)
 
-    return render_template("search.html")
+    return render_template("search2.html")
 
-@deliveryboy.route("/delete",methods = ["GET","POST"])
+@deliveryboy.route("/delete2",methods = ["GET","POST"])
 def delete_deliveryboy():
     if request.method == "POST":
         getphone = request.form["DELIVERYBOY_PHONE_NO"]
         print(getphone)
         try:
-            connection.execute("delete from DELIVERYBOY where getphone="+getphone)
+            connection.execute("delete from DELIVERYBOY where DELIVERYBOY_PHONE_NO="+getphone)
             connection.commit()
             print("Delivery Boy data Deleted Successfully.")
         except Exception as e:
             print("Error occured ", e)
 
-    return render_template("delete.html")
+    return render_template("delete2.html")
 
-@deliveryboy.route("/update",methods = ["GET","POST"])
+@restaurant.route('/up2', methods=['GET', 'POST'])
+def updation():
+    global getname
+    cursor = connection.cursor()
+    if request.method == "POST":
+        getname = request.form["NAME_OF_DELIVERYBOY"]
+        count = cursor.execute("SELECT * FROM DELIVERYBBOY WHERE NAME_OF_DELIVERYBOY='" + getname + "'")
+        result = cursor.fetchall()
+        if result is None:
+            print("Delivery boy Name Not Exist")
+        else:
+            return render_template("up2.html", search=result, status=True)
+    else:
+        return render_template("up2.html", search=[], status=False)
+
+@deliveryboy.route("/update2",methods = ["GET","POST"])
 def update_deliveryboy():
     if request.method == "POST":
         getname = request.form["NAME_OF_DELIVERYBOY"]
         getpassword = request.form["DELIVERYBOY_PASSWORD"]
         getaddress = request.form["ADDRESS"]
         getstatus = request.form["DELIVERYBOY_STATUS"]
+        getemail = request.form["DELIVERYBOY_EMAIL"]
         getphone = request.form["DELIVERYBOY_PHONE_NO"]
         getwallet = request.form["DELIVERYBOY_WALLET_BALANCE"]
         try:
-            connection.execute("update DELIVERYBOY set NAME_OF_DELIVERYBOY='"+getname+"',DELIVERYBOY_PASSWORD="+getpassword+",ADDRESS='"+getaddress+"',DELIVERYBOY_STATUS='"+getstatus+"',DELIVERYBOY_WALLET_BALANCE="+getwallet+" where DELIVERYBOY_PHONE_NO='"+getphone+"")
+            connection.execute("update DELIVERYBOY set NAME_OF_DELIVERYBOY='"+getname+"',DELIVERYBOY_PASSWORD="+getpassword+",ADDRESS='"+getaddress+"',DELIVERYBOY_STATUS='"+getstatus+"',DELIVERYBOY_EMAIL='"+getemail+"',DELIVERYBOY_WALLET_BALANCE="+getwallet+" where DELIVERYBOY_PHONE_NO='"+getphone+"")
             connection.commit()
             print("Updated Successfully")
         except Exception as e:
             print(e)
 
-    return render_template("update.html")
+    return render_template("update2.html")
 
 
-if _name=="main_":
-    Deliveryboy.run()
+if __name__=="__main__":
+    deliveryboy.run()
