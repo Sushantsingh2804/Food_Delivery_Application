@@ -1,219 +1,141 @@
-foodex = Flask(__name__)
+from flask import Flask, request, render_template, flash
+import sqlite3 as s
 
+from werkzeug.utils import redirect
 
-@foodex.route("/", methods=["GET", "POST"])
-def RESTAURANT_login():
+connection = s.connect("foodex.db", check_same_thread=False)
+table1 = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name= 'USER'").fetchall()
+
+if table1 != []:
+    print("Table Already Exist")
+else:
+    connection.execute('''CREATE TABLE USER(
+                        USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        USER_NAME TEXT,
+                        USER_PASSWORD TEXT,
+                        USER_EMAIL TEXT,
+                        USER_PHONE_NO INTEGER,
+                        USER_ADDRESS TEXT,
+                        USER_WALLET_BALANCE
+                       )''')
+
+    print("Table Created Successfully")
+
+user=Flask(__name__)
+
+@user.route("/1",methods = ["GET","POST"])
+def user_login():
+    global result1, result2, a, b
     if request.method == "POST":
-        getusername = request.form["username"]
-        getpassword = request.form["password"]
-        print(getusername)
-        print(getpassword)
-        if getusername == "restaurant" and getpassword == "12345":
-            return redirect("/dashboard")
-    return render_template("admin.html")
+        getemail = request.form["USER_EMAIL"]
+        getpassword = request.form["USER_PASSSWORD"]
+        result1 = connection.execute("SELECT EMAIL FROM USER")
+        result2 = connection.execute("SELECT PASSWORD FROM USER")
+        for i in result1:
+            print(i[0])
+            result1 = i[0]
+        for j in result2:
+            print(j[0])
+            result2 = j[0]
+        if getEmail == result1 and getPass == result2:
+            return redirect('/login1')
+        else:
+            return render_template("user_login.html", status=True)
+    else:
+        return render_template("user_login.html", status=False)
 
 
-@foodex.route("/dashboard", methods=["GET", "POST"])
-def RESTAURANT_registration():
+@user.route("/dashboard1",methods = ["GET","POST"])
+def user_registration():
     if request.method == "POST":
-        getname = request.form["name"]
-        getpassword = request.form["password"]
-        getaddress = request.form["address"]
-        getemail = request.form["email"]
-        getmobileno = request.form["mobileno"]
-        getwalletbalance = request.form["walletbalance"]
+        getname=request.form["USER_NAME"]
+        getpassword=request.form["USER_PASSWORD"]
+        getemail=request.form["USER_EMAIL"]
+        getphone=request.form["USER_PHONE_NO"]
+        getaddress=request.form["USER_ADDRESS"]
+        getwallet= request.form["USER_WALLET_BALANCE"]
         print(getname)
         print(getpassword)
-        print(getaddress)
         print(getemail)
-        print(getmobileno)
-        print(getwalletbalance)
-
-        try:
-            connection.execute("insert into RESTAURANT (name,password,mobileno,address,walletbalance)\
-                               values('" + getname + "'," + getpassword + "," + getmobileno + ",'" + getaddress + "','"+getemail+"','" + getwalletbalance + "')")
-            connection.commit()
-            print(" Data Added Successfully.")
-        except Exception as e:
-            print("Error occured ", e)
-
-    return render_template("dashboard.html")
-
-
-@foodex.route("/viewall")
-def view_RESTAURANT():
-    cursor = connection.cursor()
-    count = cursor.execute("select * from RESTAURANT")
-    result = cursor.fetchall()
-    return render_template("viewall.html", RESTAURANT=result)
-
-
-@foodex.route("/search", methods=["GET", "POST"])
-def search_RESTAURANT():
-    if request.method == "POST":
-        getmobileno = request.form["mobileno"]
-        print(getmobileno)
-        cursor = connection.cursor()
-        count = cursor.execute("select * from RESTAURANT where mobileno=" + getmobileno)
-        result = cursor.fetchall()
-        return render_template("search.html", searchRESTAURANT=result)
-
-    return render_template("search.html")
-
-
-@foodex.route("/delete", methods=["GET", "POST"])
-def delete_RESTAURANT():
-    if request.method == "POST":
-        getname = request.form["name"]
-        getpassword = request.form["password"]
-        getaddress = request.form["address"]
-        getemail = request.form["email"]
-        getmobileno = request.form["mobileno"]
-        getwalletbalance = request.form["walletbalance"]
-        print(getname)
-        print(getpassword)
+        print(getphone)
         print(getaddress)
-        print(getemail)
-        print(getmobileno)
-        print(getwalletbalance)
-
+        print(getwallet)
         try:
-            connection.execute("delete from RESTAURANT where mobileno=" + getmobileno + ")
-            connection.commit()
-            print("Restaurant data Deleted Successfully.")
-        except Exception as e:
-            print("Error occured ", e)
-
-    return render_template("delete.html")
-
-
-@foodex.route("/update", methods=["GET", "POST"])
-def update_RESTAURANT():
-    if request.method == "POST":
-        mobileno = request.form["mobileno"]
-        name = request.form["name"]
-        password = request.form["password"]
-        address = request.form["address"]
-        email = request.form["email"]
-        walletbalance = request.form["walletbalance"]
-        try:
-            connection.execute(
-                "update Restaurant set name='" + name + "',address='" + address + "',email='"+ email +"',password='" + password + "',walletbalance='" + walletbalance + "' where mobileno=" + mobnumber)
-            connection.commit()
-            print("Updated Successfully")
-        except Exception as e:
-            print(e)
-
-    return render_template("update.html")
-
-
-@foodex.route("/", methods=["GET", "POST"])
-def RESTAURANT_login():
-    if request.method == "POST":
-        getusername = request.form["username"]
-        getpassword = request.form["password"]
-        print(getusername)
-        print(getpassword)
-        if getusername == "RESTAURANT" and getpassword == "12345":
-            return redirect("/dashboard")
-    return render_template("admin.html")
-
-
-@foodex.route("/dashboard", methods=["GET", "POST"])
-def RESTAURANT_registration():
-    if request.method == "POST":
-        getname = request.form["name"]
-        getmobileno = request.form["mobileno"]
-        getpassword = request.form["password"]
-        getaddress = request.form["address"]
-        getemail = request.form["email"]
-        getwalletbalance = request.form["walletbalance"]
-        print(getname)
-        print(getmobileno)
-        print(getpassword)
-        print(getaddress)
-        print(getemail)
-        print(getwalletbalance)
-
-        try:
-            connection.execute("insert into RESTAURANT(name,mobileno,address,password,walletbalance)\
-                               values('" + getname + "'," + getmobileno + ",'" + getaddress + "','"+ getemail +"','" + getpassword + "'," + getwalletbalance + ")")
+            connection.execute("insert into USER(USER_NAME,USER_PASSWORD,USER_EMAIL,USER_PHONE_NO,USER_ADDRESS,USER_WALLET_BALANCE)\
+                               values('" + getname + "','" + getpassword + "','" + getemail + "'," + getphone + ",'" + getaddress + "'," + getwallet + ")")
             connection.commit()
             print("Restaurant Data Added Successfully.")
         except Exception as e:
             print("Error occured ", e)
 
-    return render_template("dashboard.html")
+    return render_template("dashboard1.html")
 
+@user.route("/viewall1")
+def view_user():
+    cursor=connection.cursor()
+    count=cursor.execute("select * from USER")
+    result=cursor.fetchall()
+    return render_template("viewall1.html",USER=result)
 
-@foodex.route("/viewall")
-def view_RESTAURANT():
-    cursor = connection.cursor()
-    count = cursor.execute("select * from Restaurant")
-    result = cursor.fetchall()
-    return render_template("viewall.html", Restaurant=result)
-
-
-@foodex.route("/search", methods=["GET", "POST"])
-def search_RESTAURANT():
+@user.route("/search1",methods = ["GET","POST"])
+def search_user():
     if request.method == "POST":
-        getmobileno = request.form["mobileno"]
-        print(getmobileno)
+        getphone=request.form["USER_PHONE_NO"]
+        print(getphone)
         cursor = connection.cursor()
-        count = cursor.execute("select * from restaurant where mobileno=" + getmobileno)
+        count = cursor.execute("select * from USER where USER_PHONE_NO="+getphone)
         result = cursor.fetchall()
-        return render_template("search.html", searchrestaurant=result)
+        return render_template("search1.html", searchuser=result)
 
-    return render_template("search.html")
+    return render_template("search1.html")
 
-
-@foodex.route("/delete", methods=["GET", "POST"])
-def delete_RESTAURANT():
+@user.route("/delete1",methods = ["GET","POST"])
+def delete_user():
     if request.method == "POST":
-        getname = request.form["name"]
-        getmobileno = request.form["mobileno"]
-        getpassword = request.form["password"]
-        getaddress = request.form["address"]
-        getemail = request.form["email"]
-        getwalletbalance = request.form["walletbalance"]
-        print(getname)
-        print(getmobileno)
-        print(getpassword)
-        print(getaddress)
-        print(getemail)
-        print(getwalletbalance)
-
+        getphone = request.form["USER_PHONE_NO"]
+        print(getphone)
         try:
-            connection.execute("delete from Restaurant where mobileno=" + getmobileno)
+            connection.execute("delete from USER where USER_PHONE_NO="+getphone)
             connection.commit()
-            print("Restaurant data Deleted Successfully.")
+            print("User data Deleted Successfully.")
         except Exception as e:
             print("Error occured ", e)
 
-    return render_template("delete.html")
+    return render_template("delete1.html")
 
-
-@foodex.route("/update", methods=["GET", "POST"])
-def update_RESTAURANT():
+@user.route('/up1', methods=['GET', 'POST'])
+def updation():
+    global getNName
+    cursor = connection.cursor()
     if request.method == "POST":
-        mobnumber = request.form["mobileno"]
-        name = request.form["name"]
-        password = request.form["password"]
-        address = request.form["address"]
-        email = request.form["email"]
-        walletbalance = request.form["walletbalance"]
+        getname = request.form["USER_NAME"]
+        count = cursor.execute("SELECT * FROM USER WHERE USER_NAME='" + getname + "'")
+        result = cursor.fetchall()
+        if result is None:
+            print("User Name Not Exist")
+        else:
+            return render_template("up1.html", search=result, status=True)
+    else:
+        return render_template("up1.html", search=[], status=False)
+
+@user.route("/update1",methods = ["GET","POST"])
+def update_user():
+    if request.method == "POST":
+        getname = request.form["USER_NAME"]
+        getpassword = request.form["USER_PASSWORD"]
+        getemail = request.form["USER_EMAIL"]
+        getphone = request.form["USER_PHONE_NO"]
+        getaddress = request.form["USER_ADDRESS"]
+        getwallet = request.form["USER_WALLET_BALANCE"]
         try:
-            connection.execute(
-                "update Restaurant set name='" + name + "',password=" + password + ",address='" + address + "',email='"+ email +"',mobileno='" + mobileno + "',walletbalance=" + walletbalance + " where mobileno=" + mobnumber)
+            connection.execute("update USER set USER_NAME='"+getname+"',USER_PASSWORD="+getpassword+",USER_EMAIL='"+getemail+"',USER_ADDRESS='"+getaddress+"',USER_WALLET_BALANCE="+getwallet+" where USER_PHONE_NO="+getphone+"")
             connection.commit()
             print("Updated Successfully")
         except Exception as e:
             print(e)
 
-    return render_template("update.html")
+    return render_template("update1.html")
 
 
-if __name__ == "__main__":
+if __name__=="__main__":
     user.run()
-
-
