@@ -143,6 +143,5 @@ def deliveryboy_Dashboard():
 #
 #     return render_template("update1.html")
 
-
 if __name__=="__main__":
     user.run()
