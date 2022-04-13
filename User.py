@@ -70,7 +70,71 @@ def user_registration():
             print("Restaurant Data Added Successfully.")
         except Exception as e:
             print("Error occured ", e)
-
+# @user.route("/viewall1")
+# def view_user():
+#     cursor=connection.cursor()
+#     count=cursor.execute("select * from USER")
+#     result=cursor.fetchall()
+#     return render_template("viewall1.html",USER=result)
+#
+# @user.route("/search1",methods = ["GET","POST"])
+# def search_user():
+#     if request.method == "POST":
+#         getphone=request.form["USER_PHONE_NO"]
+#         print(getphone)
+#         cursor = connection.cursor()
+#         count = cursor.execute("select * from USER where USER_PHONE_NO="+getphone)
+#         result = cursor.fetchall()
+#         return render_template("search1.html", searchuser=result)
+#
+#     return render_template("search1.html")
+#
+# @user.route("/delete1",methods = ["GET","POST"])
+# def delete_user():
+#     if request.method == "POST":
+#         getphone = request.form["USER_PHONE_NO"]
+#         print(getphone)
+#         try:
+#             connection.execute("delete from USER where USER_PHONE_NO="+getphone)
+#             connection.commit()
+#             print("User data Deleted Successfully.")
+#         except Exception as e:
+#             print("Error occured ", e)
+#
+#     return render_template("delete1.html")
+#
+# @user.route('/up1', methods=['GET', 'POST'])
+# def updation():
+#     global getNName
+#     cursor = connection.cursor()
+#     if request.method == "POST":
+#         getname = request.form["USER_NAME"]
+#         count = cursor.execute("SELECT * FROM USER WHERE USER_NAME='" + getname + "'")
+#         result = cursor.fetchall()
+#         if result is None:
+#             print("User Name Not Exist")
+#         else:
+#             return render_template("up1.html", search=result, status=True)
+#     else:
+#         return render_template("up1.html", search=[], status=False)
+#
+# @user.route("/update1",methods = ["GET","POST"])
+# def update_user():
+#     if request.method == "POST":
+#         getname = request.form["USER_NAME"]
+#         getpassword = request.form["USER_PASSWORD"]
+#         getemail = request.form["USER_EMAIL"]
+#         getphone = request.form["USER_PHONE_NO"]
+#         getaddress = request.form["USER_ADDRESS"]
+#         getwallet = request.form["USER_WALLET_BALANCE"]
+#         try:
+#             connection.execute("update USER set USER_NAME='"+getname+"',USER_PASSWORD="+getpassword+",USER_EMAIL='"+getemail+"',USER_ADDRESS='"+getaddress+"',USER_WALLET_BALANCE="+getwallet+" where USER_PHONE_NO="+getphone+"")
+#             connection.commit()
+#             print("Updated Successfully")
+#         except Exception as e:
+#             print(e)
+#
+#     return render_template("update1.html")
 
 if __name__=="__main__":
     user.run()
