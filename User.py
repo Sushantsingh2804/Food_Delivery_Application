@@ -70,6 +70,11 @@ def user_registration():
             print("Restaurant Data Added Successfully.")
         except Exception as e:
             print("Error occured ", e)
+
+@user.route("/User-Dashboard")
+def deliveryboy_Dashboard():
+    return render_template("User_Dashboard.html")
+
 # @user.route("/viewall1")
 # def view_user():
 #     cursor=connection.cursor()
