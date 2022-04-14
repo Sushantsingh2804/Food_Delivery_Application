@@ -5,9 +5,20 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8abefc6f-9d40-4252-be4a-8af80b0043c8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Tests/Food/FunctionalTestSuite/DeliveryServices.robot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/Food/FunctionalTestSuite/Resturant.robot" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Tests/Food/FunctionalTestSuite/User.robot" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Restaurant.py" beforeDir="false" afterPath="$PROJECT_DIR$/Restaurant.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/log.html" beforeDir="false" afterPath="$PROJECT_DIR$/Results/log.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/output.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Results/output.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Results/report.html" beforeDir="false" afterPath="$PROJECT_DIR$/Results/report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/Food/FunctionalTestSuite/testcase.robot" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/User.py" beforeDir="false" afterPath="$PROJECT_DIR$/User.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/User_Dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/User_Dashboard.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/foodex.db" beforeDir="false" afterPath="$PROJECT_DIR$/foodex.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/DeliveryBoy_Register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/DeliveryBoy_Register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Resturant_Register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Resturant_Register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/User_Registration.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/User_Registration.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

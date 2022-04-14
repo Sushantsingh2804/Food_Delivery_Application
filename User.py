@@ -70,6 +70,8 @@ def user_registration():
             print("Restaurant Data Added Successfully.")
         except Exception as e:
             print("Error occured ", e)
+        return redirect("/")
+    return render_template("User_Registration.html")
 
 @user.route("/User-Dashboard")
 def deliveryboy_Dashboard():

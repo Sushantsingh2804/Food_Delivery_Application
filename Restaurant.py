@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template, flash
 import sqlite3 as s
-
 from werkzeug.utils import redirect
 
 connection = s.connect("foodex.db", check_same_thread=False)
