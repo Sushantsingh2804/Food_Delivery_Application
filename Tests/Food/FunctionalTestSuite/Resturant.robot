@@ -38,7 +38,21 @@ Resaurant login
     input text  name:RESTAURANT_PASSWORD  ${password}
     sleep  2s
     click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
+
+Menu Add Item
+    [Documentation]  Add Item to The Menu
+    [Tags]  Add Item
     sleep  2s
+    click link  xpath:/html/body/nav/div/div/ul/li[3]/a
+    sleep  2s
+    input text  name:ITEM_NAME  Chiken-Biriyani
+    sleep  2s
+    input text  name:ITEM_CATEGORY  Non-Veg
+    sleep  2s
+    input text  name:ITEM_PRICE  45
+    sleep  2s
+    click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
+    sleep  4s
     close browser
 
 

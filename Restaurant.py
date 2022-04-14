@@ -1,11 +1,12 @@
-from flask import Flask, request, render_template, flash
-import sqlite3 as s
+from flask import Flask, request, render_template, flash ,session
+import sqlite3 as sql
+from flask_session import Session
 from werkzeug.utils import redirect
 
-connection = s.connect("foodex.db", check_same_thread=False)
-table1 = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name= 'RESTAURANT'").fetchall()
+connection = sql.connect("foodex.db", check_same_thread=False)
+table = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name= 'RESTAURANT'").fetchall()
 
-if table1 != []:
+if table != []:
     print("Table Already Exist")
 else:
     connection.execute('''CREATE TABLE RESTAURANT(
@@ -20,28 +21,55 @@ else:
 
     print("Table Created Successfully")
 
-restaurant = Flask(__name__)
+table = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name='MENU'").fetchall()
 
+if table != []:
+    print("Table Already Exist")
+else:
+    connection.execute('''CREATE TABLE MENU(
+                        ITEM_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        ITEM_NAME TEXT,
+                        ITEM_CATEGORY TEXT,
+                        ITEM_PRICE INTEGER,
+                        RESTAURANT_ID INTEGER,
+                        FOREIGN KEY(RESTAURANT_ID) REFERENCES RESTAURANT(RESTAURANT_ID)
+                       )''')
+    print("Table Created Successfully")
+
+restaurant = Flask(__name__)
+restaurant.config["SESSION_PERMANENT"] = False
+restaurant.config["SESSION_TYPE"] = "filesystem"
+Session(restaurant)
 @restaurant.route("/",methods = ["GET","POST"])
 def restaurant_login():
-    global result1, result2
     if request.method == "POST":
         getname = request.form["NAME_OF_RESTAURANT"]
         getPass = request.form["RESTAURANT_PASSWORD"]
-        result1 = connection.execute("SELECT NAME_OF_RESTAURANT FROM RESTAURANT")
-        result2 = connection.execute("SELECT RESTAURANT_PASSWORD FROM RESTAURANT")
-        for i in result1:
-            print(i[0])
-            result1 = i[0]
-        for j in result2:
-            print(j[0])
-            result2 = j[0]
-        if getname == result1 and getPass == result2:
-            return redirect('/Resturant-Dashboard')
-        else:
-            return render_template("Resturant_Login.html", status=True)
-    else:
-        return render_template("Resturant_Login.html", status=False)
+        cursor = connection.cursor()
+        query = "select * from RESTAURANT where NAME_OF_RESTAURANT='" + getname + "' and RESTAURANT_PASSWORD ='" + getPass + "'"
+        result = cursor.execute(query).fetchall()
+        if len(result) > 0:
+            for i in result:
+                getname = i[1]
+                getid = i[0]
+                session["name"] = getname
+                session["id"] = getid
+            return redirect("/Resturant-Dashboard")
+    return render_template("Resturant_Login.html")
+    #     result1 = connection.execute("SELECT NAME_OF_RESTAURANT FROM RESTAURANT")
+    #     result2 = connection.execute("SELECT RESTAURANT_PASSWORD FROM RESTAURANT")
+    #     for i in result1:
+    #         print(i[0])
+    #         result1 = i[0]
+    #     for j in result2:
+    #         print(j[0])
+    #         result2 = j[0]
+    #     if getname == result1 and getPass == result2:
+    #         return redirect('/Resturant-Dashboard')
+    #     else:
+    #         return render_template("Resturant_Login.html", status=True)
+    # else:
+    #     return render_template("Resturant_Login.html", status=False)
 
 
 @restaurant.route("/Restaurant-Registration", methods= ["GET", "POST"])
@@ -70,8 +98,34 @@ def restaurant_registration():
 
 @restaurant.route("/Resturant-Dashboard")
 def deliveryboy_Dashboard():
-    return render_template("Resturant_Dashboard.html")
+    if not session.get("name"):
+        return redirect("/")
+    else:
+        return render_template("Resturant_Dashboard.html")
 
+@restaurant.route("/Add-Item",methods = ["GET","POST"])
+def Add_Item():
+    if request.method == "POST":
+        getname = request.form["ITEM_NAME"]
+        getcategory = request.form["ITEM_CATEGORY"]
+        getprice = request.form["ITEM_PRICE"]
+        getid=str(session["id"])
+        try:
+            connection.execute("insert into MENU(ITEM_NAME,ITEM_CATEGORY,ITEM_PRICE,RESTAURANT_ID)\
+                                  values('" + getname + "','" + getcategory + "','" + getprice + "'," + getid + ")")
+            connection.commit()
+            return redirect("/View-Menu")
+        except Exception as e:
+            print("Error occured ", e)
+
+    return render_template("Add_Menu_Item.html")
+
+@restaurant.route("/View-Menu")
+def view_menu():
+    cursor=connection.cursor()
+    count=cursor.execute("SELECT m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(session["id"])+"; ")
+    result=cursor.fetchall()
+    return render_template("View_Menu.html",MENU=result)
 # @restaurant.route("/viewall")
 # def view_restaurant():
 #     cursor=connection.cursor()
