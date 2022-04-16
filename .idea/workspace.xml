@@ -5,24 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8abefc6f-9d40-4252-be4a-8af80b0043c8" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Delivaryboy_dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Menu.py" beforeDir="false" afterPath="$PROJECT_DIR$/Menu.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Restaurant.py" beforeDir="false" afterPath="$PROJECT_DIR$/Restaurant.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Resturant_Dashboard.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Results/log.html" beforeDir="false" afterPath="$PROJECT_DIR$/Results/log.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Results/output.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Results/output.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Results/report.html" beforeDir="false" afterPath="$PROJECT_DIR$/Results/report.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/Food/FunctionalTestSuite/DeliveryServices.robot" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/Food/FunctionalTestSuite/DeliveryServices.robot" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Tests/Food/FunctionalTestSuite/Resturant.robot" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/Food/FunctionalTestSuite/Resturant.robot" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/User_dashboard.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/foodex.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/static/Styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/Styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/DeliveryBoy_Dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/DeliveryBoy_Dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Resturant_Dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Resturant_Dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/Styles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Tests/Food/FunctionalTestSuite/User.robot" beforeDir="false" afterPath="$PROJECT_DIR$/Tests/Food/FunctionalTestSuite/User.robot" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" beforeDir="false" afterPath="$PROJECT_DIR$/flask_session/2029240f6d1128be89ddc32729463129" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/DeliveryBoy_Login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/DeliveryBoy_Login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/DeliveryBoy_Register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/DeliveryBoy_Register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Resturant_Login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Resturant_Login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/Resturant_Register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/Resturant_Register.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/User_Dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/User_Dashboard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/User_Registration.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/User_Registration.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/User_login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/User_login.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -32,8 +32,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -84,5 +84,15 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/app.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

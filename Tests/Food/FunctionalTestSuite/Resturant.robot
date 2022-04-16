@@ -13,6 +13,8 @@ Resaurant Registration
     open Browser  http://127.0.0.1:5000/  chrome
     maximize browser window
     sleep  2s
+    click link  xpath:/html/body/div/div/div/div/form/span[1]/a
+    sleep  2s
     click link  xpath:/html/body/div/div/div/div/form/table/tbody/tr[6]/td[2]/a
     sleep  2s
     input text  name:NAME_OF_RESTAURANT  Thalapakatti Biriyani
@@ -54,8 +56,6 @@ Menu Add Item
     click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
     sleep  4s
     close browser
-
-
 
 *** Keywords ***
 

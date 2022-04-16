@@ -12,6 +12,8 @@ User Registration
     open Browser  http://127.0.0.1:5000/  chrome
     maximize browser window
     sleep  2s
+    click link  xpath:/html/body/div/div/div/div/form/span[2]/a
+    sleep  2s
     click link  xpath:/html/body/div/div/div/div/form/table/tbody/tr[6]/td[2]/a
     sleep  2s
     input text  name:USER_NAME  Ram

@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard</title>
+    <title>Add Menu-Item</title>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg bg-white">
@@ -38,40 +38,43 @@
   </div>
      </div>
 </nav>
-<div class="ToCenter" style="background:#2196f3;">
-    <div class="container">
+  <div class="ToCenter" style="background:#ff9800;">
+  <div class="container">
         <div class="row">
             <div class="col">
-                <form action="/" method="post">
-                    <table class="table">
+                <table class="table">
+                    <thead>
                       <tr>
-                          <h1 class="Logo" style="color:#2196f3;">Foodex</h1>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Mobile Number</th>
+                        <th scope="col">Address</th>
+
                       </tr>
+                    </thead>
+                    <tbody>
+                      {% for i in Resturant %}
                       <tr>
-                        <h3 class="Logo">User Service Dashboard</h3>
+                        <td>{{i[0]}}</td>
+                        <td>{{i[1]}}</td>
+                          <td>{{i[4]}}</td>
+                          <td>{{i[3]}}</td>
+                            <td> <a class="nav-link nav-link-btn" href="/View-Resturant-menu?id={{i[0]}}"> View Menu</a> </td>
                       </tr>
-                        <tr>
-                        <h4 class="Logo">
-                            {% if session.name %}
-                Welcome {{session.name}}
-                {% else %}
-                Not Yet Login
-                {% endif %}</h4>
-                      </tr>
-                    </table>
-                </form>
+                      {% endfor %}
+                    </tbody>
+                  </table>
             </div>
         </div>
     </div>
     </div>
-
-<style>
-    .container{
-      width: 50vw;
-      background: white;
-      border-radius: 1rem;
-    }
-</style>
+    <style>
+        .container{
+          width: 50vw;
+          background: white;
+          border-radius: 1rem;
+        }
+    </style>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>
