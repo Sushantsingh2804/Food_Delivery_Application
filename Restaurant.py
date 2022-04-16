@@ -46,7 +46,7 @@ def restaurant_login():
         getname = request.form["NAME_OF_RESTAURANT"]
         getPass = request.form["RESTAURANT_PASSWORD"]
         cursor = connection.cursor()
-        query = "select * from RESTAURANT where NAME_OF_RESTAURANT='" + getname + "' and RESTAURANT_PASSWORD ='" + getPass + "'"
+        query = "select * from  RESTAURANT where NAME_OF_RESTAURANT='" + getname + "' and RESTAURANT_PASSWORD ='" + getPass + "'"
         result = cursor.execute(query).fetchall()
         if len(result) > 0:
             for i in result:
@@ -126,6 +126,44 @@ def view_menu():
     count=cursor.execute("SELECT m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(session["id"])+"; ")
     result=cursor.fetchall()
     return render_template("View_Menu.html",MENU=result)
+
+
+@restaurant.route("/Delete-Item",methods = ["GET","POST"])
+def Delete_Item():
+    if request.method == "POST":
+        getname = request.form["ITEM_NAME"]
+        getcategory = request.form["ITEM_CATEGORY"]
+        getprice = request.form["ITEM_PRICE"]
+        getid=str(session["id"])
+        try:
+            connection.execute("DELETE FROM  MENU(ITEM_NAME,ITEM_CATEGORY,ITEM_PRICE,RESTAURANT_ID)\
+                                  values('" + getname + "','" + getcategory + "','" + getprice + "'," + getid + ")")
+            connection.commit()
+            return redirect("/View-Menu")
+        except Exception as e:
+            print("Error occured ", e)
+
+    return render_template("Delete_Menu_Item.html")
+
+
+
+@restaurant.route("/Update-Item",methods = ["GET","POST"])
+def Update_Item():
+    if request.method == "POST":
+        getname = request.form["ITEM_NAME"]
+        getcategory = request.form["ITEM_CATEGORY"]
+        getprice = request.form["ITEM_PRICE"]
+        getid=str(session["id"])
+        try:
+            connection.execute("UPDTAE INTO  MENU(ITEM_NAME,ITEM_CATEGORY,ITEM_PRICE,RESTAURANT_ID)\
+                                  values('" + getname + "','" + getcategory + "','" + getprice + "'," + getid + ")")
+            connection.commit()
+            return redirect("/View-Menu")
+        except Exception as e:
+            print("Error occured ", e)
+    return render_template("Update_Menu_Item.html")
+
+
 # @restaurant.route("/viewall")
 # def view_restaurant():
 #     cursor=connection.cursor()
