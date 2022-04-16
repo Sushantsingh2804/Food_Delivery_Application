@@ -33,7 +33,7 @@ def adding_menu():
         print(getid)
         try:
             connection.execute("insert into USER(ITEM_NAME,ITEM_CATEGORY,ITEM_PRICE,RESTAURANT_ID)\
-                               values('" + getname + "','" + getcategory + "','" + getprice + "'," + getid + ")")
+                               values('" + getname + "','" + getcategory + "','" + getprice + "','" + getid + "')")
             connection.commit()
             print("Menu Added Successfully.")
         except Exception as e:
