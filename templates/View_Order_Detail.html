@@ -43,25 +43,51 @@
         <div class="row">
             <div class="col">
                 <table class="table">
+                    <tbody>
+                    <tr>
+                        <h4 class="Logo">Order Details</h4>
+                        </tr>
+                      {% for i in Order %}
+                      <tr>
+                            <td>Order id: </td>
+                            <td>{{i[0]}}</td>
+                        </tr>
+                     <tr>
+                            <td>Name of Resturant:</td>
+                            <td>{{i[3]}}</td>
+                        </tr>
+                        <tr>
+                            <td>Amount:</td>
+                            <td>{{i[1]}}</td>
+                        </tr>
+                        <tr>
+                            <td>Status:</td>
+                            <td>{{i[2]}}</td>
+                        </tr>
+
+
+                      {% endfor %}
+                  </table>
+                <table class="table">
                     <thead>
                       <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Mobile Number</th>
-                        <th scope="col">Address</th>
-
+                        <th scope="col">Item Name</th>
+                        <th scope="col">Item Count</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {% for i in Resturant %}
+                      {% for i in Item_list %}
                       <tr>
                         <td>{{i[0]}}</td>
-                        <td>{{i[1]}}</td>
-                          <td>{{i[4]}}</td>
-                          <td>{{i[3]}}</td>
-                            <td> <a class="Edit-btn" style="background:#2196f3;" href="/View-Resturant-menu?id={{i[0]}}"> View Menu</a> </td>
+                          <td>{{i[1]}}</td>
+
                       </tr>
                       {% endfor %}
+                    <tr>
+                        <td></td>
+                          <td> <a class="Edit-btn" style="background:#2196f3;" href="/User-order">Back to Orders</a> </td>
+
+                      </tr>
                     </tbody>
                   </table>
             </div>

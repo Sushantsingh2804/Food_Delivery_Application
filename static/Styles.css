@@ -64,3 +64,15 @@ align-items: center;
   text-decoration: underline;
   color: grey;
 }
+.Edit-btn{
+  border:solid 2px white;
+  color: white;
+  text-decoration:none;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.7rem;
+}
+
+.Edit-btn:hover{
+  border:solid 2px black;
+  color: black;
+}

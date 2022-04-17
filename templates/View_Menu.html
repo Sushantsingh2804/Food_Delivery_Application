@@ -26,7 +26,7 @@
         <a class="nav-link nav-link-btn" href="/View-Menu">View Menu</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="/Add-Item">Edit Menu</a>
+        <a class="nav-link nav-link-btn" href="/Add-Item">Add Item</a>
       </li>
         <li class="nav-item">
         <a class="nav-link nav-link-btn" href="/Resturant-Orders">Orders</a>
@@ -45,6 +45,7 @@
                 <table class="table">
                     <thead>
                       <tr>
+
                         <th scope="col">Name</th>
                         <th scope="col">Category</th>
                         <th scope="col">Price</th>
@@ -54,9 +55,11 @@
                     <tbody>
                       {% for i in MENU %}
                       <tr>
-                        <td>{{i[0]}}</td>
                         <td>{{i[1]}}</td>
-                          <td>{{i[2]}}</td>
+                        <td>{{i[2]}}</td>
+                          <td>{{i[3]}}</td>
+                        <td> <a class="Edit-btn" style="background:#ff9800;" href="/Edit-Item?id={{i[0]}}">Edit</a> </td>
+                          <td> <a class="Edit-btn" style="background:#ff9800;" href="/Delete-Item?id={{i[0]}}">Delete</a> </td>
 
                       </tr>
                       {% endfor %}

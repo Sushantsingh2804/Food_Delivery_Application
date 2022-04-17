@@ -38,7 +38,7 @@
   </div>
      </div>
 </nav>
-  <div class="ToCenter" style="background:#ff9800;">
+  <div class="ToCenter" style="background:#2196f3;">
   <div class="container">
         <div class="row">
             <div class="col">
@@ -54,10 +54,10 @@
                     <tbody>
                       {% for i in MENU %}
                       <tr>
-                        <td>{{i[0]}}</td>
                         <td>{{i[1]}}</td>
                           <td>{{i[2]}}</td>
-                            <td> <a class="nav-link nav-link-btn" href="/User-cart?id={{i[0]}}"> Add To Cart</a> </td>
+                          <td>{{i[3]}}</td>
+                            <td> <a class="Edit-btn" style="background:#2196f3;" href="/User-add-cart?id={{i[0]}}&res_id={{Res_id}}"> Add To Cart</a> </td>
                       </tr>
                       {% endfor %}
                     </tbody>

@@ -43,26 +43,29 @@
         <div class="row">
             <div class="col">
                 <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Mobile Number</th>
-                        <th scope="col">Address</th>
-
-                      </tr>
-                    </thead>
                     <tbody>
-                      {% for i in Resturant %}
+                    <tr>
+                        <h4 class="Logo">Item added successfully</h4>
+                        </tr>
+                      {% for i in Item %}
                       <tr>
-                        <td>{{i[0]}}</td>
-                        <td>{{i[1]}}</td>
-                          <td>{{i[4]}}</td>
-                          <td>{{i[3]}}</td>
-                            <td> <a class="Edit-btn" style="background:#2196f3;" href="/View-Resturant-menu?id={{i[0]}}"> View Menu</a> </td>
-                      </tr>
+                            <td>Item Name: </td>
+                            <td>{{i[0]}}</td>
+                        </tr>
+                        <tr>
+                            <td>Item Category</td>
+                            <td>{{i[1]}}</td>
+                        </tr>
+                        <tr>
+                            <td>Item Price</td>
+                            <td>{{i[2]}}</td>
+                        </tr>
+
                       {% endfor %}
-                    </tbody>
+                    <tr>
+                        <td></td>
+                            <td><a class="Edit-btn" style="background:#2196f3;" href="/View-Resturant-menu?id={{id}}">Go Back to the Menu</a></td>
+                        </tr>
                   </table>
             </div>
         </div>

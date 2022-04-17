@@ -38,30 +38,37 @@
   </div>
      </div>
 </nav>
-  <div class="ToCenter" style="background:#ff9800;">
+  <div class="ToCenter" style="background:#2196f3;">
   <div class="container">
         <div class="row">
             <div class="col">
                 <table class="table">
                     <thead>
                       <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Mobile Number</th>
-                        <th scope="col">Address</th>
+                        <th scope="col">Item Name</th>
+                        <th scope="col">Item Category</th>
+                        <th scope="col">Item Price</th>
+                          <th scope="col">Quantity</th>
 
                       </tr>
                     </thead>
                     <tbody>
-                      {% for i in Resturant %}
+                      {% for i in Items %}
                       <tr>
-                        <td>{{i[0]}}</td>
                         <td>{{i[1]}}</td>
-                          <td>{{i[4]}}</td>
+                          <td>{{i[2]}}</td>
                           <td>{{i[3]}}</td>
-                            <td> <a class="nav-link nav-link-btn" href="/View-Resturant-menu?id={{i[0]}}"> View Menu</a> </td>
+                          <td>{{i[4]}}</td>
+                          <td> <a class="Edit-btn" style="background:#2196f3;" href="/RemoveFrom-Cart?id={{i[0]}}">Remove From Cart</a> </td>
+
                       </tr>
                       {% endfor %}
+                    <tr>
+                        <td></td>
+                          <td></td>
+                          <td> <a class="Edit-btn" style="background:#2196f3;" href="/Place-Order">Place The Order</a> </td>
+
+                      </tr>
                     </tbody>
                   </table>
             </div>

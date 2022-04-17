@@ -36,7 +36,7 @@ else:
                         USER_PHONE_NO INTEGER,
                         USER_ADDRESS TEXT,
                         USER_PINCODE TEXT,
-                        USER_WALLET_BALANCE
+                        USER_WALLET_BALANCE INTEGER
                        )''')
 
     print("Table Created Successfully")
@@ -73,6 +73,55 @@ else:
                         ITEM_PRICE INTEGER,
                         RESTAURANT_ID INTEGER,
                         FOREIGN KEY(RESTAURANT_ID) REFERENCES RESTAURANT(RESTAURANT_ID)
+                       )''')
+    print("Table Created Successfully")
+
+################################# cart table ###############################################
+
+table = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name='CART'").fetchall()
+
+if table != []:
+    print("Table Already Exist")
+else:
+    connection.execute('''CREATE TABLE CART(
+                        USER_ID INTEGER, 
+  						ITEM_ID INTEGER,
+  						RESTAURANT_ID INTEGER,
+                        FOREIGN KEY(RESTAURANT_ID) REFERENCES RESTAURANT(RESTAURANT_ID)
+  						FOREIGN KEY(USER_ID) REFERENCES USER(USER_ID),
+                        FOREIGN KEY(ITEM_ID) REFERENCES MENU(ITEM_ID)
+                       )''')
+    print("Table Created Successfully")
+#################################### order table ############################################
+table = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name='ORDER_TABLE'").fetchall()
+
+if table != []:
+    print("Table Already Exist")
+else:
+    connection.execute('''CREATE TABLE ORDER_TABLE(
+                        ORDER_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        ORDER_AMOUNT INTEGER,
+                        DELIVERYBOY_ID INTEGER, 
+                        ORDER_STATUS TEXT,  						
+                        USER_ID INTEGER, 
+  						RESTAURANT_ID INTEGER, 
+  						FOREIGN KEY (USER_ID) REFERENCES USER(USER_ID),
+  						FOREIGN KEY (DELIVERYBOY_ID) REFERENCES DELIVERYBOY(DELIVERYBOY_ID),
+  						FOREIGN KEY (RESTAURANT_ID) REFERENCES RESTAURANT(RESTAURANT_ID)             
+                       )''')
+    print("Table Created Successfully")
+###################################### ITEM LIST ####################################
+table = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name='ITEM_LIST'").fetchall()
+
+if table != []:
+    print("Table Already Exist")
+else:
+    connection.execute('''CREATE TABLE ITEM_LIST(
+                        ORDER_ID INTEGER,                        
+                        ITEM_ID INTEGER,
+                        Item_count INTEGER,
+                        FOREIGN KEY (ORDER_ID) REFERENCES ORDER_TABLE(ORDER_ID),
+                        FOREIGN KEY (ITEM_ID) REFERENCES MENU(ITEM_ID)
                        )''')
     print("Table Created Successfully")
 
@@ -154,10 +203,45 @@ def Add_Item():
 @app.route("/View-Menu")
 def view_menu():
     cursor=connection.cursor()
-    count=cursor.execute("SELECT m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(session["id"])+"; ")
+    cursor.execute("SELECT m.ITEM_ID,m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(session["id"])+"; ")
     result=cursor.fetchall()
     return render_template("View_Menu.html",MENU=result)
+@app.route("/Delete-Item")
+def Delete_Item():
+    getid = request.args.get('id')
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM MENU where ITEM_ID=" + getid)
+    result = cursor.fetchall()
+    connection.execute("delete from MENU where ITEM_ID=" + getid)
+    connection.commit()
+    print("Menu data Deleted Successfully.")
+    return render_template("Resturant_Delete_item.html", Item=result)
 
+@app.route("/Edit-Item")
+def Edit_Item():
+    getid = str(request.args.get('id'))
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM MENU where ITEM_ID=" + getid)
+    result = cursor.fetchall()
+    return render_template("Update_Menu_Item.html", Item=result)
+
+@app.route("/Update-Item",methods = ["GET","POST"])
+def Update_Item():
+    if request.method == "POST":
+        try:
+            getid = request.form["ITEM_ID"]
+            print(getid)
+            getname = request.form["ITEM_NAME"]
+            print(getname)
+            getcategory = request.form["ITEM_CATEGORY"]
+            print(getcategory)
+            getprice = request.form["ITEM_PRICE"]
+            print(getprice)
+            connection.execute("UPDATE MENU SET ITEM_NAME=" +getname+ ",ITEM_CATEGORY=" +getcategory+ ",ITEM_PRICE=" +getprice+ " WHERE ITEM_ID= " +getid )
+            return redirect("/View-Menu")
+        except Exception as e:
+            print("Error occured ", e)
+    return render_template("Update_Menu_Item.html")
 ##################################### delivery #######################################################################
 
 @app.route("/Delivery", methods=["GET", "POST"])
@@ -216,10 +300,12 @@ def user_login():
         result = cursor.execute(query).fetchall()
         if len(result) > 0:
             for i in result:
-                getname = i[3]
+                getname = i[1]
+                getemail = i[3]
                 getid = i[0]
                 session["name"] = getname
                 session["id"] = getid
+                session["email"] = getemail
             return redirect("/User-Dashboard")
     return render_template("User_login.html")
 
@@ -233,7 +319,7 @@ def user_registration():
         getpassword=request.form["USER_PASSWORD"]
         getaddress = request.form["ADDRESS"]
         getpincode = request.form["Pincode"]
-        setwallet = '0'
+        setwallet = '1000'
         print(getname)
         print(getpassword)
         print(getemail)
@@ -265,14 +351,92 @@ def User_View_Resturant():
 def view_menu_user():
     getid=request.args.get('id')
     cursor=connection.cursor()
-    count=cursor.execute("SELECT m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(getid)+"; ")
+    count=cursor.execute("SELECT m.ITEM_ID,m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(getid)+"; ")
     result=cursor.fetchall()
-    return render_template("View_Menu_user.html",MENU=result)
+    return render_template("View_Menu_user.html",MENU=result,Res_id=getid)
 
 @app.route("/User-cart")
-def view_menu_user():
-    getid=request.args.get('id')
+def view_cart():
     cursor=connection.cursor()
-    count=cursor.execute("SELECT m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(getid)+"; ")
+    cursor.execute("SELECT m.ITEM_ID,m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE,COUNT(m.ITEM_ID) FROM MENU m LEFT JOIN CART c ON m.ITEM_ID = c.ITEM_ID WHERE c.USER_ID="+str(session["id"])+" GROUP BY m.ITEM_ID; ")
     result=cursor.fetchall()
-    return render_template("User_Cart.html",MENU=result)
+    return render_template("User_Cart.html",Items=result)
+
+@app.route("/User-add-cart")
+def add_cart():
+    getid= request.args.get('res_id')
+    getid_i = request.args.get('id')
+    getid_u = str(session["id"])
+    connection.execute("insert into CART(ITEM_ID,USER_ID,RESTAURANT_ID)values('" + getid_i + "','" + getid_u + "','" + getid + "')")
+    connection.commit()
+    print("Added to Successfully.")
+    cursor = connection.cursor()
+    cursor.execute("SELECT m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m WHERE m.ITEM_ID = "+str(getid_i)+"; ")
+    result = cursor.fetchall()
+    return render_template("User_Add_Item.html", Item=result ,id = getid)
+
+@app.route("/RemoveFrom-Cart")
+def remove_cart():
+    getid= request.args.get('id')
+    connection.execute("delete from CART where ITEM_ID="+getid)
+    connection.commit()
+    print("Deleted to Successfully.")
+    cursor = connection.cursor()
+    cursor.execute("SELECT m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m WHERE m.ITEM_ID = "+str(getid)+"; ")
+    result = cursor.fetchall()
+    return render_template("User_Delete_Item.html", Item=result)
+
+@app.route("/Place-Order")
+def place_order():
+    getid = str(session["id"])
+    cursor = connection.cursor()
+    cursor.execute("SELECT SUM(m.item_price),c.RESTAURANT_ID FROM CART c JOIN MENU m on m.ITEM_ID=c.ITEM_ID WHERE c.USER_ID="+getid)
+    result = cursor.fetchall()
+    print(result[0][0])
+    if result[0][0] is not None:
+        for i in result:
+            connection.execute("Insert into ORDER_TABLE(ORDER_AMOUNT,ORDER_STATUS,USER_ID,RESTAURANT_ID) values("+str(i[0])+",'Order Placed'," +getid+ ","+str(i[1])+")")
+            connection.commit()
+    cursor.execute("SELECT O.order_id,C.item_id,COUNT(C.item_id) FROM CART C JOIN ORDER_TABLE O ON C.USER_ID=O.USER_ID WHERE C.user_id="+getid)
+    result = cursor.fetchall()
+    print(result)
+    if result[0][0] is not None:
+        for i in result:
+            connection.execute('Insert into ITEM_LIST(ORDER_ID,ITEM_ID,Item_count) values('+str(i[0])+','+str(i[1])+','+str(i[2])+')')
+            connection.commit()
+    print("Order Added Successfully.")
+    connection.execute("delete from CART where USER_ID=" + getid)
+    connection.commit()
+    print("Cart Empty now")
+    cursor.execute("SELECT SUM(ORDER_AMOUNT) FROM ORDER_TABLE WHERE USER_ID=" + getid +" AND ORDER_STATUS='Order Placed'")
+    order_ammount = cursor.fetchall()[0][0]
+    if order_ammount is not None:
+        cursor.execute("SELECT USER_WALLET_BALANCE FROM USER WHERE USER_ID=" + getid)
+        User_Wallet = cursor.fetchall()[0][0]
+        User_Balance = User_Wallet-order_ammount
+        connection.execute("update USER set USER_WALLET_BALANCE='" + str(User_Balance) + "' where USER_ID=" + getid)
+        connection.execute("update ORDER_TABLE SET ORDER_STATUS= 'Ammount Paid' WHERE USER_ID=" + getid)
+        connection.commit()
+
+    cursor.execute("SELECT order_id, order_amount, order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.USER_ID= " + getid)
+    result = cursor.fetchall()
+    return render_template("User_Order.html", Items=result)
+@app.route("/User-order")
+def view_Order():
+    getid = str(session["id"])
+    cursor=connection.cursor()
+    cursor.execute("SELECT order_id, order_amount, order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.USER_ID= "+getid)
+    result=cursor.fetchall()
+    return render_template("User_Order.html",Items=result)
+
+@app.route("/View-Order-Detail")
+def View_Order_Detail():
+    getid_o = request.args.get('id')
+    getid_u = str(session["id"])
+    cursor = connection.cursor()
+    cursor.execute("SELECT order_id, order_amount, order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.USER_ID= " + getid_u)
+    result = cursor.fetchall()
+    cursor = connection.cursor()
+    cursor.execute("SELECT m.item_name,i.item_count FROM ITEM_LIST i JOIN MENU m on i.ITEM_ID=m.ITEM_ID WHERE i.ORDER_ID= "+str(getid_o)+"; ")
+    Item_list = cursor.fetchall()
+    return render_template("View_Order_Detail.html", Order=result, Item_list = Item_list)

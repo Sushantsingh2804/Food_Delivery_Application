@@ -45,23 +45,30 @@
                 <table class="table">
                     <thead>
                       <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Mobile Number</th>
-                        <th scope="col">Address</th>
+                        <th scope="col">Order ID</th>
+                          <th scope="col">Name of Resturant</th>
+                        <th scope="col">Order Ammount</th>
+                        <th scope="col">Order Status</th>
 
                       </tr>
                     </thead>
                     <tbody>
-                      {% for i in Resturant %}
+                      {% for i in Items %}
                       <tr>
                         <td>{{i[0]}}</td>
-                        <td>{{i[1]}}</td>
-                          <td>{{i[4]}}</td>
                           <td>{{i[3]}}</td>
-                            <td> <a class="Edit-btn" style="background:#2196f3;" href="/View-Resturant-menu?id={{i[0]}}"> View Menu</a> </td>
+                          <td>{{i[1]}}</td>
+                          <td>{{i[2]}}</td>
+                          <td> <a class="Edit-btn" style="background:#2196f3;" href="/View-Order-Detail?id={{i[0]}}">View in detail</a> </td>
+
                       </tr>
                       {% endfor %}
+                    <tr>
+                        <td></td>
+                          <td></td>
+                          <td> <a class="Edit-btn" style="background:#2196f3;" href="/Place-Order">Place The Order</a> </td>
+
+                      </tr>
                     </tbody>
                   </table>
             </div>

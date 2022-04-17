@@ -11,7 +11,7 @@
 <body>
 <nav class="navbar navbar-expand-lg bg-white">
 
-  <h3 class="navbar-brand Logo" style="color:#2196f3;font-size: 2rem;"href="#">Foodex</h3>
+  <h3 class="navbar-brand Logo" style="color:#ff9800;font-size: 2rem;"href="#">Foodex</h3>
     <div class="container">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -20,49 +20,52 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto nav-links">
         <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="/User-Dashboard">Home</a>
+        <a class="nav-link nav-link-btn" href="/Resturant-Dashboard">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="/View-Resturant">Search</a>
+        <a class="nav-link nav-link-btn" href="/View-Menu">View Menu</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="/User-cart">Cart</a>
+        <a class="nav-link nav-link-btn" href="/Add-Item">Add Item</a>
       </li>
         <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="/User-order">Order</a>
+        <a class="nav-link nav-link-btn" href="/Resturant-Orders">Orders</a>
       </li>
         <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="/User-Wallet">Wallet</a>
+        <a class="nav-link nav-link-btn" href="/Resturant-Wallet">Wallet</a>
       </li>
     </ul>
   </div>
      </div>
 </nav>
-  <div class="ToCenter" style="background:#2196f3;">
+  <div class="ToCenter" style="background:#ff9800;">
   <div class="container">
         <div class="row">
             <div class="col">
                 <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Mobile Number</th>
-                        <th scope="col">Address</th>
-
-                      </tr>
-                    </thead>
                     <tbody>
-                      {% for i in Resturant %}
+                    <tr>
+                        <h4 class="Logo">Item Deleted successfully</h4>
+                        </tr>
+                      {% for i in Item %}
                       <tr>
-                        <td>{{i[0]}}</td>
-                        <td>{{i[1]}}</td>
-                          <td>{{i[4]}}</td>
-                          <td>{{i[3]}}</td>
-                            <td> <a class="Edit-btn" style="background:#2196f3;" href="/View-Resturant-menu?id={{i[0]}}"> View Menu</a> </td>
-                      </tr>
+                            <td>Item Name: </td>
+                            <td>{{i[1]}}</td>
+                        </tr>
+                        <tr>
+                            <td>Item Category</td>
+                            <td>{{i[2]}}</td>
+                        </tr>
+                        <tr>
+                            <td>Item Price</td>
+                            <td>{{i[3]}}</td>
+                        </tr>
+
                       {% endfor %}
-                    </tbody>
+                    <tr>
+                        <td></td>
+                            <td><a class="Edit-btn" style="background:#ff9800;" href="/View-Menu">Go Back to the Menu</a></td>
+                        </tr>
                   </table>
             </div>
         </div>
