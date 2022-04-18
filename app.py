@@ -440,3 +440,6 @@ def View_Order_Detail():
     cursor.execute("SELECT m.item_name,i.item_count FROM ITEM_LIST i JOIN MENU m on i.ITEM_ID=m.ITEM_ID WHERE i.ORDER_ID= "+str(getid_o)+"; ")
     Item_list = cursor.fetchall()
     return render_template("View_Order_Detail.html", Order=result, Item_list = Item_list)
+
+if __name__ == "__main__":
+    app.run()
