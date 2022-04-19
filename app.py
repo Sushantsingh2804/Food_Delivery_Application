@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, flash ,session
 import sqlite3 as sql
 from flask_session import Session
 from werkzeug.utils import redirect
+import razorpay
 
 connection = sql.connect("foodex.db", check_same_thread=False)
 table = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name= 'RESTAURANT'").fetchall()
