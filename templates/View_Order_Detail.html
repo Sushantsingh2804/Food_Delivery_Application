@@ -32,7 +32,7 @@
         <a class="nav-link nav-link-btn" href="/User-order">Order</a>
       </li>
         <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="/User-Wallet">Wallet</a>
+        <a class="nav-link nav-link-btn" href="/">Log out</a>
       </li>
     </ul>
   </div>
@@ -63,6 +63,14 @@
                         <tr>
                             <td>Status:</td>
                             <td>{{i[2]}}</td>
+                        </tr>
+                    <tr>
+                            <td>Delivery boy name:</td>
+                            <td>{{i[4]}}</td>
+                        </tr>
+                    <tr>
+                            <td>Contact:</td>
+                            <td>{{i[5]}}</td>
                         </tr>
 
 
@@ -110,7 +118,7 @@
                       {% if i[2]=="Order Placed" %}
                     <tr>
                         <td></td>
-                          <td> <a class="Edit-btn" style="background:#2196f3;" href="/User-order">Pay for the order</a> </td>
+                          <td> <a class="Edit-btn" style="background:#2196f3;" href="/Place-Order">Pay for the order</a> </td>
 
                       </tr>
                       {% endif %}

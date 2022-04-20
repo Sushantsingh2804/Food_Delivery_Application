@@ -11,7 +11,7 @@
 <body>
 <nav class="navbar navbar-expand-lg bg-white">
 
-  <h3 class="navbar-brand Logo" style="color:#8cc34b;;font-size: 2rem;"href="#">Foodex</h3>
+  <h3 class="navbar-brand Logo" style="color:#8cc34b;font-size: 2rem;"href="#">Foodex</h3>
     <div class="container">
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -20,16 +20,16 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto nav-links">
       <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="#">Home</a>
+        <a class="nav-link nav-link-btn" href="/Delivery-Dashboard">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="#">Status</a>
+        <a class="nav-link nav-link-btn" href="/Available-Orders">Available Orders</a>
       </li>
         <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="#">Orders</a>
+        <a class="nav-link nav-link-btn" href="/Your-Orders">Your Orders</a>
       </li>
         <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="#">Wallet</a>
+        <a class="nav-link nav-link-btn" href="/">Log out</a>
       </li>
     </ul>
   </div>
@@ -39,16 +39,24 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <form action="/" method="post">
                     <table class="table">
                       <tr>
                           <h1 class="Logo" style="color:#8cc34b;">Foodex</h1>
                       </tr>
+                         <tr>
+                        <h3 class="Logo">
+                           Delivery Service Dashboard</h3>
+                      </tr>
                       <tr>
-                        <h3 class="Logo">Delivery Service Dashboard</h3>
+                        <h4 class="Logo">
+                            {% if session.name %}
+                Welcome {{session.name}}
+                {% else %}
+                Not Yet Login
+                {% endif %}</h4>
                       </tr>
                     </table>
-                </form>
+                    </table>
             </div>
         </div>
     </div>

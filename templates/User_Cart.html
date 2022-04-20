@@ -32,7 +32,7 @@
         <a class="nav-link nav-link-btn" href="/User-order">Order</a>
       </li>
         <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="/User-Wallet">Wallet</a>
+        <a class="nav-link nav-link-btn" href="/">Log out</a>
       </li>
     </ul>
   </div>
@@ -43,6 +43,7 @@
         <div class="row">
             <div class="col">
                 <table class="table">
+                    {% if Items %}
                     <thead>
                       <tr>
                         <th scope="col">Item Name</th>
@@ -70,6 +71,9 @@
 
                       </tr>
                     </tbody>
+                    {% else %}
+                    <h4 class="Logo">Empty Cart</h4>
+                    {% endif %}
                   </table>
             </div>
         </div>

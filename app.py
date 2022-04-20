@@ -2,15 +2,12 @@ from flask import Flask, request, render_template, flash ,session
 import sqlite3 as sql
 from flask_session import Session
 from werkzeug.utils import redirect
-<<<<<<< HEAD
 import datetime
-=======
->>>>>>> 7841bf6119e1e9456d0cc6d073468d2e922bff0a
 import razorpay
 
 connection = sql.connect("foodex.db", check_same_thread=False)
 table = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name= 'RESTAURANT'").fetchall()
-client = razorpay.Client(auth=("rzp_test_oM842Fk6QJEhtt", "7WRvXfi7gJ1FK2KsmB5lFnkS"))
+client = razorpay.Client(auth=("rzp_test_8NMGatIpSoE4t6", "69tb4Fjdj6LBd7Fja65fBzTB"))
 
 ################### resturant table ########################
 if table != []:
@@ -23,7 +20,7 @@ else:
                         ADDRESS TEXT,
                         MOBILE_NO INTEGER,
                         RESTAURANT_PIN TEXT,
-                        RESTAURANT_WALLET_BALANCE INTEGER
+                        RESTAURANT_IMAGE TEXT
                        )''')
 
     print("Table Created Successfully")
@@ -59,9 +56,7 @@ else:
                         NAME_OF_DELIVERYBOY TEXT,
                         DELIVERYBOY_PASSWORD TEXT,
                         ADDRESS TEXT,
-                        DELIVERYBOY_STATUS TEXT,
-                        DELIVERYBOY_PHONE_NO INTEGER,
-                        DELIVERYBOY_WALLET_BALANCE INTEGER
+                        DELIVERYBOY_PHONE_NO INTEGER
                        )''')
 
     print("Table Created Successfully")
@@ -151,6 +146,9 @@ Session(app)
 
 @app.route("/",methods = ["GET","POST"])
 def app_start():
+    session["name"] = ""
+    session["id"] = ""
+    session["email"]= ""
     return render_template("Index.html")
 
 ############################## resturant ##############################################
@@ -261,7 +259,41 @@ def Update_Item():
         except Exception as e:
             print("Error occured ", e)
     return render_template("Update_Menu_Item.html")
-##################################### delivery #######################################################################
+
+
+@app.route("/Resturant-Orders")
+def Resturant_Order():
+    getid = str(session["id"])
+    cursor = connection.cursor()
+    cursor.execute("SELECT o.order_id, o.order_amount, o.order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.RESTAURANT_ID= "+getid+" AND o.order_status='Payment Made'")
+    result_p = cursor.fetchall()
+    cursor.execute("SELECT o.order_id, o.order_amount, o.order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.RESTAURANT_ID= " + getid + " AND o.order_status='Order Ready For Pick up'")
+    result_d = cursor.fetchall()
+    return render_template("Resturant_Order.html", Items_p=result_p, Items_d=result_d)
+
+@app.route("/Complete-order")
+def Complete_Order():
+    getid = str(session["id"])
+    getid_o = request.args.get('id')
+    order_status = "Order Ready For Pick up"
+    current_time = datetime.datetime.now()
+    current_time.strftime("%m/%d/%Y, %H:%M:%S")
+    connection.execute("Insert into ORDER_SUMMARY(ORDER_ID,ORDER_STATUS,TIME) values(" + str(getid_o) + ",'" + order_status + "','" + str(current_time) + "')")
+    connection.commit()
+    connection.execute("UPDATE ORDER_TABLE SET ORDER_STATUS='" + order_status + "' WHERE ORDER_ID=" + str(getid_o))
+    connection.commit()
+    cursor = connection.cursor()
+    cursor.execute("SELECT o.order_id, o.order_amount, o.order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.RESTAURANT_ID= "+getid+" AND o.order_status='Payment Made'")
+    result_p = cursor.fetchall()
+    cursor.execute("SELECT o.order_id, o.order_amount, o.order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.RESTAURANT_ID= " + getid + " AND o.order_status='Order Ready For Pick up'")
+    result_d = cursor.fetchall()
+    return render_template("Resturant_Order.html", Items_p=result_p, Items_d=result_d)
+
+
+
+
+
+##################################### delivery ##########################################
 
 @app.route("/Delivery", methods=["GET", "POST"])
 def deliveryboy_login():
@@ -307,6 +339,60 @@ def deliveryboy_registration():
 def deliveryboy_Dashboard():
     return render_template("DeliveryBoy_Dashboard.html")
 
+@app.route("/Available-Orders")
+def Available_Orders():
+    cursor = connection.cursor()
+    cursor.execute("SELECT order_id, order_amount, order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.order_status='Order Ready For Pick up'")
+    result=cursor.fetchall()
+    return render_template("Available_Order.html", Items=result)
+
+@app.route("/Order-Select")
+def Select_Orders():
+    getid = str(session["id"])
+    getid_o = request.args.get('id')
+    order_status = "Order on Route"
+    current_time = datetime.datetime.now()
+    current_time.strftime("%m/%d/%Y, %H:%M:%S")
+    connection.execute("Insert into ORDER_SUMMARY(ORDER_ID,ORDER_STATUS,TIME) values(" + str(
+        getid_o) + ",'" + order_status + "','" + str(current_time) + "')")
+    connection.commit()
+    connection.execute("UPDATE ORDER_TABLE SET ORDER_STATUS='" + order_status + "',DELIVERYBOY_ID="+getid+" WHERE ORDER_ID=" + str(getid_o))
+    connection.commit()
+    cursor = connection.cursor()
+    cursor.execute("SELECT o.order_id, o.order_amount, o.order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.DELIVERYBOY_ID="+getid+ " AND o.order_status='Order on Route'")
+    result_p = cursor.fetchall()
+    cursor.execute("SELECT o.order_id, o.order_amount, o.order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.DELIVERYBOY_ID="+getid+ " AND o.order_status='Order Delivered'")
+    result_d = cursor.fetchall()
+    return render_template("Delivery_Order.html", Items_p=result_p, Items_d=result_d)
+@app.route("/Complete-Delivery")
+def Complete_Orders():
+    getid = str(session["id"])
+    getid_o = request.args.get('id')
+    order_status = "Order Delivered"
+    current_time = datetime.datetime.now()
+    current_time.strftime("%m/%d/%Y, %H:%M:%S")
+    connection.execute("Insert into ORDER_SUMMARY(ORDER_ID,ORDER_STATUS,TIME) values(" + str(
+        getid_o) + ",'" + order_status + "','" + str(current_time) + "')")
+    connection.commit()
+    connection.execute("UPDATE ORDER_TABLE SET ORDER_STATUS='" + order_status + "' WHERE ORDER_ID=" + str(getid_o))
+    connection.commit()
+    cursor = connection.cursor()
+    cursor.execute("SELECT o.order_id, o.order_amount, o.order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.DELIVERYBOY_ID="+getid+ " AND o.order_status='Order on Route'")
+    result_p = cursor.fetchall()
+    cursor.execute("SELECT o.order_id, o.order_amount, o.order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.DELIVERYBOY_ID="+getid+ " AND o.order_status='Order Delivered'")
+    result_d = cursor.fetchall()
+    return render_template("Delivery_Order.html", Items_p=result_p, Items_d=result_d)
+
+@app.route("/Your-Orders")
+def Delivery_Orders():
+    getid = str(session["id"])
+    cursor = connection.cursor()
+    cursor.execute("SELECT o.order_id, o.order_amount, o.order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.DELIVERYBOY_ID="+getid+ " AND o.order_status='Order on Route'")
+    result_p = cursor.fetchall()
+    cursor.execute("SELECT o.order_id, o.order_amount, o.order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.DELIVERYBOY_ID="+getid+ " AND o.order_status='Order Delivered'")
+    result_d = cursor.fetchall()
+    return render_template("Delivery_Order.html", Items_p=result_p, Items_d=result_d)
+
 ################################## user #########################################
 
 @app.route("/User",methods = ["GET","POST"])
@@ -339,12 +425,6 @@ def user_registration():
         getaddress = request.form["ADDRESS"]
         getpincode = request.form["Pincode"]
         setwallet = '1000'
-        print(getname)
-        print(getpassword)
-        print(getemail)
-        print(getphone)
-        print(getaddress)
-        print(setwallet)
         try:
             connection.execute("insert into USER(USER_NAME,USER_PASSWORD,USER_EMAIL,USER_PHONE_NO,USER_ADDRESS,USER_PINCODE,USER_WALLET_BALANCE)\
                                values('" + getname + "','" + getpassword + "','" + getemail + "'," + getphone + ",'" + getaddress + "'," + getpincode + "," + setwallet + ")")
@@ -408,6 +488,7 @@ def remove_cart():
 @app.route("/Place-Order")
 def place_order():
     getid = str(session["id"])
+    order_status = "Order Placed"
     cursor = connection.cursor()
     cursor.execute("SELECT SUM(m.item_price),c.RESTAURANT_ID FROM CART c JOIN MENU m on m.ITEM_ID=c.ITEM_ID WHERE c.USER_ID="+getid)
     result = cursor.fetchall()
@@ -425,7 +506,6 @@ def place_order():
             for j in result:
                 current_time = datetime.datetime.now()
                 current_time.strftime("%m/%d/%Y, %H:%M:%S")
-                order_status = "Order Placed"
                 connection.execute('Insert into ITEM_LIST(ORDER_ID,ITEM_ID,Item_count) values('+str(i)+','+str(j[0])+','+str(j[1])+')')
                 connection.commit()
                 connection.execute("Insert into ORDER_SUMMARY(ORDER_ID,ORDER_STATUS,TIME) values(" + str(i) + ",'" + order_status + "','" + str(current_time) + "')")
@@ -434,11 +514,19 @@ def place_order():
     connection.execute("delete from CART where USER_ID=" + getid)
     connection.commit()
     print("Cart Empty now")
-    order_ammount=0
-    for i in Order_ids:
-        cursor.execute("SELECT SUM(ORDER_AMOUNT) FROM ORDER_TABLE WHERE USER_ID=" + getid + " AND ORDER_ID="+str(i))
-        order_ammount = order_ammount+cursor.fetchall()[0][0]
-    return render_template("Order_Placed.html", Order=order_ammount)
+    cursor.execute("SELECT SUM(ORDER_AMOUNT) FROM ORDER_TABLE WHERE USER_ID=" + getid + " AND ORDER_STATUS='Order Placed'")
+    order_ammount = cursor.fetchall()[0][0]
+    current_time = datetime.datetime.now()
+    current_time.strftime("%m/%d/%Y, %H:%M:%S")
+    DATA = {
+        "amount": order_ammount * 100,
+        "currency": "INR",
+        "receipt": "receipt"+str(getid)+str(current_time),
+        "payment_capture":"1"
+    }
+    payment = client.order.create(data=DATA)
+    print(payment)
+    return render_template("Order_Placed.html", Order=order_ammount,payment=payment)
 
 @app.route("/User-order")
 def view_Order():
@@ -453,18 +541,33 @@ def View_Order_Detail():
     getid_o = request.args.get('id')
     getid_u = str(session["id"])
     cursor = connection.cursor()
-    cursor.execute("SELECT order_id, order_amount, order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.USER_ID= " + getid_u +" And ORDER_ID= "+str(getid_o)+"; ")
+    cursor.execute("SELECT order_id, order_amount, order_status,r.name_of_restaurant,d.NAME_OF_DELIVERYBOY,d.DELIVERYBOY_PHONE_NO FROM ORDER_TABLE o INNER JOIN DELIVERYBOY d on o.DELIVERYBOY_ID=d.DELIVERYBOY_ID INNER JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.USER_ID= " + getid_u +" And ORDER_ID= "+str(getid_o)+"; ")
     result = cursor.fetchall()
     cursor = connection.cursor()
     cursor.execute("SELECT m.item_name,i.item_count FROM ITEM_LIST i JOIN MENU m on i.ITEM_ID=m.ITEM_ID WHERE i.ORDER_ID= "+str(getid_o)+"; ")
     Item_list = cursor.fetchall()
-<<<<<<< HEAD
     cursor.execute("SELECT os.ORDER_STATUS,os.TIME FROM ORDER_SUMMARY os JOIN ORDER_TABLE o ON os.ORDER_ID=o.ORDER_ID WHERE os.ORDER_ID="+str(getid_o))
     Order_Summary = cursor.fetchall()
     return render_template("View_Order_Detail.html", Order=result, Item_list = Item_list,Order_Summary=Order_Summary)
-=======
-    return render_template("View_Order_Detail.html", Order=result, Item_list = Item_list)
+@app.route("/Order-Success")
+def Success_Order():
+    getid = str(session["id"])
+    order_status = "Payment Made"
+    cursor = connection.cursor()
+    cursor.execute(
+        "SELECT order_id FROM ORDER_TABLE WHERE USER_ID=" + getid + " AND ORDER_STATUS='Order Placed'")
+    result = cursor.fetchall()
+    for i in result:
+        current_time = datetime.datetime.now()
+        current_time.strftime("%m/%d/%Y, %H:%M:%S")
+        connection.execute("Insert into ORDER_SUMMARY(ORDER_ID,ORDER_STATUS,TIME) values(" + str(i[0]) + ",'" + order_status + "','" + str(current_time) + "')")
+        connection.commit()
+        connection.execute("UPDATE ORDER_TABLE SET ORDER_STATUS='"+ order_status + "' WHERE ORDER_ID="+str(i[0]))
+        connection.commit()
+    cursor.execute(
+        "SELECT order_id, order_amount, order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.USER_ID= " + getid)
+    result = cursor.fetchall()
+    return render_template("User_Order.html", Items=result)
 
 if __name__ == "__main__":
     app.run()
->>>>>>> 7841bf6119e1e9456d0cc6d073468d2e922bff0a

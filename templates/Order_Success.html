@@ -32,7 +32,7 @@
         <a class="nav-link nav-link-btn" href="/User-order">Order</a>
       </li>
         <li class="nav-item">
-        <a class="nav-link nav-link-btn" href="/">Log out</a>
+        <a class="nav-link nav-link-btn" href="/User-Wallet">Wallet</a>
       </li>
     </ul>
   </div>
@@ -42,28 +42,15 @@
   <div class="container">
         <div class="row">
             <div class="col">
-                <table class="table">
-                    <thead>
+                    <table class="table">
                       <tr>
-                        <th scope="col">Id</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Mobile Number</th>
-                        <th scope="col">Address</th>
-
+                          <h1 class="Logo" style="color:#2196f3;">Foodex</h1>
                       </tr>
-                    </thead>
-                    <tbody>
-                      {% for i in Resturant %}
-                      <tr>
-                        <td>{{i[0]}}</td>
-                        <td>{{i[1]}}</td>
-                          <td>{{i[4]}}</td>
-                          <td>{{i[3]}}</td>
-                            <td> <a class="Edit-btn" style="background:#2196f3;" href="/View-Resturant-menu?id={{i[0]}}"> View Menu</a> </td>
+                         <tr>
+                        <h3 class="Logo">
+                           Order Success</h3>
                       </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+                    </table>
             </div>
         </div>
     </div>
