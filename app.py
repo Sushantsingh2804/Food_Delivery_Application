@@ -2,10 +2,15 @@ from flask import Flask, request, render_template, flash ,session
 import sqlite3 as sql
 from flask_session import Session
 from werkzeug.utils import redirect
+<<<<<<< HEAD
+import datetime
+=======
+>>>>>>> 7841bf6119e1e9456d0cc6d073468d2e922bff0a
 import razorpay
 
 connection = sql.connect("foodex.db", check_same_thread=False)
 table = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name= 'RESTAURANT'").fetchall()
+client = razorpay.Client(auth=("rzp_test_oM842Fk6QJEhtt", "7WRvXfi7gJ1FK2KsmB5lFnkS"))
 
 ################### resturant table ########################
 if table != []:
@@ -125,6 +130,19 @@ else:
                         FOREIGN KEY (ITEM_ID) REFERENCES MENU(ITEM_ID)
                        )''')
     print("Table Created Successfully")
+################################# order summary #####################################
+table = connection.execute("SELECT NAME FROM sqlite_master WHERE type='table' AND name='ORDER_SUMMARY'").fetchall()
+
+if table != []:
+    print("Table Already Exist")
+else:
+    connection.execute('''CREATE TABLE ORDER_SUMMARY(
+                        ORDER_ID INTEGER,                        
+                        ORDER_STATUS TEXT,
+                        TIME TEXT,
+                        FOREIGN KEY (ORDER_ID) REFERENCES ORDER_TABLE(ORDER_ID)
+                       )''')
+    print("Table Created Successfully")
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = False
@@ -238,7 +256,7 @@ def Update_Item():
             print(getcategory)
             getprice = request.form["ITEM_PRICE"]
             print(getprice)
-            connection.execute("UPDATE MENU SET ITEM_NAME=" +getname+ ",ITEM_CATEGORY=" +getcategory+ ",ITEM_PRICE=" +getprice+ " WHERE ITEM_ID= " +getid )
+            connection.execute("UPDATE MENU SET ITEM_NAME='" +getname+ "',ITEM_CATEGORY='" +getcategory+ "',ITEM_PRICE='" +getprice+ "' WHERE ITEM_ID= " +getid )
             return redirect("/View-Menu")
         except Exception as e:
             print("Error occured ", e)
@@ -393,35 +411,35 @@ def place_order():
     cursor = connection.cursor()
     cursor.execute("SELECT SUM(m.item_price),c.RESTAURANT_ID FROM CART c JOIN MENU m on m.ITEM_ID=c.ITEM_ID WHERE c.USER_ID="+getid)
     result = cursor.fetchall()
-    print(result[0][0])
+    Order_ids=list()
     if result[0][0] is not None:
         for i in result:
             connection.execute("Insert into ORDER_TABLE(ORDER_AMOUNT,ORDER_STATUS,USER_ID,RESTAURANT_ID) values("+str(i[0])+",'Order Placed'," +getid+ ","+str(i[1])+")")
             connection.commit()
-    cursor.execute("SELECT O.order_id,C.item_id,COUNT(C.item_id) FROM CART C JOIN ORDER_TABLE O ON C.USER_ID=O.USER_ID WHERE C.user_id="+getid)
-    result = cursor.fetchall()
-    print(result)
-    if result[0][0] is not None:
-        for i in result:
-            connection.execute('Insert into ITEM_LIST(ORDER_ID,ITEM_ID,Item_count) values('+str(i[0])+','+str(i[1])+','+str(i[2])+')')
-            connection.commit()
+            cursor.execute("SELECT last_insert_rowid();")
+            Order_ids.append(cursor.fetchall()[0][0])
+    for i in Order_ids:
+        cursor.execute("SELECT C.item_id,COUNT(C.item_id) FROM CART C JOIN ORDER_TABLE O ON C.USER_ID=O.USER_ID WHERE C.user_id=" +getid+ " AND o.ORDER_ID="+str(i))
+        result = cursor.fetchall()
+        if result[0][0] is not None:
+            for j in result:
+                current_time = datetime.datetime.now()
+                current_time.strftime("%m/%d/%Y, %H:%M:%S")
+                order_status = "Order Placed"
+                connection.execute('Insert into ITEM_LIST(ORDER_ID,ITEM_ID,Item_count) values('+str(i)+','+str(j[0])+','+str(j[1])+')')
+                connection.commit()
+                connection.execute("Insert into ORDER_SUMMARY(ORDER_ID,ORDER_STATUS,TIME) values(" + str(i) + ",'" + order_status + "','" + str(current_time) + "')")
+                connection.commit()
     print("Order Added Successfully.")
     connection.execute("delete from CART where USER_ID=" + getid)
     connection.commit()
     print("Cart Empty now")
-    cursor.execute("SELECT SUM(ORDER_AMOUNT) FROM ORDER_TABLE WHERE USER_ID=" + getid +" AND ORDER_STATUS='Order Placed'")
-    order_ammount = cursor.fetchall()[0][0]
-    if order_ammount is not None:
-        cursor.execute("SELECT USER_WALLET_BALANCE FROM USER WHERE USER_ID=" + getid)
-        User_Wallet = cursor.fetchall()[0][0]
-        User_Balance = User_Wallet-order_ammount
-        connection.execute("update USER set USER_WALLET_BALANCE='" + str(User_Balance) + "' where USER_ID=" + getid)
-        connection.execute("update ORDER_TABLE SET ORDER_STATUS= 'Ammount Paid' WHERE USER_ID=" + getid)
-        connection.commit()
+    order_ammount=0
+    for i in Order_ids:
+        cursor.execute("SELECT SUM(ORDER_AMOUNT) FROM ORDER_TABLE WHERE USER_ID=" + getid + " AND ORDER_ID="+str(i))
+        order_ammount = order_ammount+cursor.fetchall()[0][0]
+    return render_template("Order_Placed.html", Order=order_ammount)
 
-    cursor.execute("SELECT order_id, order_amount, order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.USER_ID= " + getid)
-    result = cursor.fetchall()
-    return render_template("User_Order.html", Items=result)
 @app.route("/User-order")
 def view_Order():
     getid = str(session["id"])
@@ -435,12 +453,18 @@ def View_Order_Detail():
     getid_o = request.args.get('id')
     getid_u = str(session["id"])
     cursor = connection.cursor()
-    cursor.execute("SELECT order_id, order_amount, order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.USER_ID= " + getid_u)
+    cursor.execute("SELECT order_id, order_amount, order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.USER_ID= " + getid_u +" And ORDER_ID= "+str(getid_o)+"; ")
     result = cursor.fetchall()
     cursor = connection.cursor()
     cursor.execute("SELECT m.item_name,i.item_count FROM ITEM_LIST i JOIN MENU m on i.ITEM_ID=m.ITEM_ID WHERE i.ORDER_ID= "+str(getid_o)+"; ")
     Item_list = cursor.fetchall()
+<<<<<<< HEAD
+    cursor.execute("SELECT os.ORDER_STATUS,os.TIME FROM ORDER_SUMMARY os JOIN ORDER_TABLE o ON os.ORDER_ID=o.ORDER_ID WHERE os.ORDER_ID="+str(getid_o))
+    Order_Summary = cursor.fetchall()
+    return render_template("View_Order_Detail.html", Order=result, Item_list = Item_list,Order_Summary=Order_Summary)
+=======
     return render_template("View_Order_Detail.html", Order=result, Item_list = Item_list)
 
 if __name__ == "__main__":
     app.run()
+>>>>>>> 7841bf6119e1e9456d0cc6d073468d2e922bff0a
