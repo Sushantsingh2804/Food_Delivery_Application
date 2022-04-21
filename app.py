@@ -73,6 +73,7 @@ else:
                         ITEM_CATEGORY TEXT,
                         ITEM_PRICE INTEGER,
                         RESTAURANT_ID INTEGER,
+                        ITEM_IMAGE TEXT,
                         FOREIGN KEY(RESTAURANT_ID) REFERENCES RESTAURANT(RESTAURANT_ID)
                        )''')
     print("Table Created Successfully")
@@ -148,7 +149,8 @@ Session(app)
 def app_start():
     session["name"] = ""
     session["id"] = ""
-    session["email"]= ""
+    session["email"] = ""
+    session["Image"] = ""
     return render_template("Index.html")
 
 ############################## resturant ##############################################
@@ -166,6 +168,7 @@ def app_login():
                 getid = i[0]
                 session["name"] = getname
                 session["id"] = getid
+                session["Image"] = i[6]
             return redirect("/Resturant-Dashboard")
     return render_template("Resturant_Login.html")
 
@@ -176,16 +179,11 @@ def restaurant_registration():
         getphone = request.form["MOBILE_NO"]
         getpassword = request.form["RESTAURANT_PASSWORD"]
         getaddress = request.form["ADDRESS"]
-        getpincode= request.form["Pincode"]
-        setwallet = '0'
-        print(getname)
-        print(getpassword)
-        print(getaddress)
-        print(getphone)
-        print(setwallet)
+        getpincode = request.form["Pincode"]
+        getImage = request.form["IMAGE"]
         try:
-            connection.execute("insert into RESTAURANT(NAME_OF_RESTAURANT,RESTAURANT_PASSWORD,ADDRESS,MOBILE_NO,RESTAURANT_PIN,RESTAURANT_WALLET_BALANCE)\
-                               values('" + getname + "','" + getpassword + "','" + getaddress + "'," + getphone + "," + getpincode + "," + setwallet + ")")
+            connection.execute("insert into RESTAURANT(NAME_OF_RESTAURANT,RESTAURANT_PASSWORD,ADDRESS,MOBILE_NO,RESTAURANT_PIN,RESTAURANT_IMAGE)\
+                               values('" + getname + "','" + getpassword + "','" + getaddress + "'," + getphone + "," + getpincode + ",'" + getImage + "')")
             connection.commit()
             print("Restaurant Data Added Successfully.")
         except Exception as e:
@@ -206,10 +204,11 @@ def Add_Item():
         getname = request.form["ITEM_NAME"]
         getcategory = request.form["ITEM_CATEGORY"]
         getprice = request.form["ITEM_PRICE"]
+        getImage = request.form["IMAGE"]
         getid=str(session["id"])
         try:
-            connection.execute("insert into MENU(ITEM_NAME,ITEM_CATEGORY,ITEM_PRICE,RESTAURANT_ID)\
-                                  values('" + getname + "','" + getcategory + "','" + getprice + "'," + getid + ")")
+            connection.execute("insert into MENU(ITEM_NAME,ITEM_CATEGORY,ITEM_PRICE,RESTAURANT_ID,ITEM_IMAGE)\
+                                  values('" + getname + "','" + getcategory + "','" + getprice + "'," + getid + ",'" + getImage + "')")
             connection.commit()
             return redirect("/View-Menu")
         except Exception as e:
@@ -220,7 +219,7 @@ def Add_Item():
 @app.route("/View-Menu")
 def view_menu():
     cursor=connection.cursor()
-    cursor.execute("SELECT m.ITEM_ID,m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(session["id"])+"; ")
+    cursor.execute("SELECT m.ITEM_ID,m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE,m.ITEM_IMAGE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(session["id"])+"; ")
     result=cursor.fetchall()
     return render_template("View_Menu.html",MENU=result)
 @app.route("/Delete-Item")
@@ -254,7 +253,8 @@ def Update_Item():
             print(getcategory)
             getprice = request.form["ITEM_PRICE"]
             print(getprice)
-            connection.execute("UPDATE MENU SET ITEM_NAME='" +getname+ "',ITEM_CATEGORY='" +getcategory+ "',ITEM_PRICE='" +getprice+ "' WHERE ITEM_ID= " +getid )
+            getImage = request.form["IMAGE"]
+            connection.execute("UPDATE MENU SET ITEM_NAME='" +getname+ "',ITEM_CATEGORY='" +getcategory+ "',ITEM_PRICE='" +getprice+ "' ,ITEM_IMAGE='"+getImage+"' WHERE ITEM_ID= " +getid)
             return redirect("/View-Menu")
         except Exception as e:
             print("Error occured ", e)
