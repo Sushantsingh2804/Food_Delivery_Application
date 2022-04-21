@@ -8,6 +8,7 @@ ${email}  ram@gmail.com
 ${password1}  12345
 ${username1}  Akash
 ${password2}  1234
+${Go Back}  Execute Javascript history.back()
 
 *** Test Cases ***
 1.Resaurant Registration
@@ -105,14 +106,14 @@ ${password2}  1234
     sleep  2s
     close browser
 
-5.Search Restaurant
-     [Documentation]  Search Restaurant
+5.Search Restaurant and placing order
+     [Documentation]  Search Restaurant and order placing
      [Tags]  To search Restaurant and place order
      open browser  http://127.0.0.1:5000/User  chrome
      maximize browser window
-     input text  name:USER_EMAIL  ${email}
+     input text  name:USER_EMAIL  akash@gmail.com
      sleep  2s
-     input text  name:USER_PASSSWORD  ${password1}
+     input text  name:USER_PASSSWORD  12345
      sleep  2s
      click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
      sleep  2s
@@ -125,21 +126,17 @@ ${password2}  1234
      click element  xpath:/html/body/div/div/div/div/table/tbody/tr[5]/td[2]/a
      sleep  2s
      click element  xpath:/html/body/nav/div/div/ul/li[3]/a
-     sleep  2s
-     click element  xpath:/html/body/div/div/div/div/table/tbody/tr[2]/td[3]/a
-     sleep  2s
-     click button  xpath:/html/body/div[1]/div/div/div/div/button
-     sleep  2s
+     sleep  4s
      close browser
 
 6.Order Status
-     [Documentation]  Order Status
+     [Documentation]  Order Status in user
      [Tags]  to view status of order
      open browser  http://127.0.0.1:5000/User  chrome
      maximize browser window
-     input text  name:USER_EMAIL  ${email}
+     input text  name:USER_EMAIL  akash@gmail.com
      sleep  2s
-     input text  name:USER_PASSSWORD  ${password1}
+     input text  name:USER_PASSSWORD  12345
      sleep  2s
      click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
      sleep  2s
@@ -232,15 +229,15 @@ ${password2}  1234
     [Tags]  To view overall order status
      open browser  http://127.0.0.1:5000/User  chrome
      maximize browser window
-     input text  name:USER_EMAIL  ${email}
+     input text  name:USER_EMAIL  akash@gmail.com
      sleep  2s
-     input text  name:USER_PASSSWORD  ${password1}
+     input text  name:USER_PASSSWORD  12345
      sleep  2s
      click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
      sleep  2s
      click element  xpath:/html/body/nav/div/div/ul/li[4]/a
      sleep  2s
-     click element  xpath:/html/body/div/div/div/div/table/tbody/tr[2]/td[5]/a
+     click element  xpath:/html/body/div/div/div/div/table/tbody/tr[3]/td[5]/a
      sleep  2s
      close browser
 *** Keywords ***
