@@ -2,7 +2,7 @@
 Library  SeleniumLibrary
 
 *** Variables ***
-${username}  Thalapakatti Biriyani
+${username}  Food-Route
 ${password}  6789
 ${email}  ram@gmail.com
 ${password1}  12345
@@ -21,19 +21,20 @@ ${Go Back}  Execute Javascript history.back()
     sleep  2s
     click link  xpath:/html/body/div/div/div/div/form/table/tbody/tr[6]/td[2]/a
     sleep  2s
-    input text  name:NAME_OF_RESTAURANT  RS Biriyani
+    input text  name:NAME_OF_RESTAURANT  Food-Route
     sleep  1s
     input text  name:MOBILE_NO  9098909890
     sleep  1s
-    input text  name:RESTAURANT_PASSWORD  12345
+    input text  name:RESTAURANT_PASSWORD  6789
     sleep  1s
-    input text  name:Confirm_PASSWORD  12345
+    input text  name:Confirm_PASSWORD  6789
     sleep  1s
     input text  name:ADDRESS  TRICHY
     sleep  1s
     input text  name:Pincode  600058
     sleep  1s
     click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[9]/td[2]/button
+    sleep  1s
 
 2.Resaurant login
     [Documentation]  Restaurant Login Details
@@ -53,27 +54,30 @@ ${Go Back}  Execute Javascript history.back()
     sleep  1s
     input text  name:ITEM_PRICE  100
     sleep  1s
-    click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
+    input text  name:IMAGE  https://1.bp.blogspot.com/-yJBQwqQcUOs/X5gtEJXEoCI/AAAAAAAAY94/gut_UssF__8lT0P2kl9patf4FY-U4YCtQCLcBGAsYHQ/s2048/chicken%2B65%2B4.JPG
     sleep  1s
-    click element  xpath:/html/body/div/div/div/div/table/tbody/tr[1]/td[4]/a
+    click button  xpath:/html/body/div[1]/div/div/div/form/table/tbody/tr[6]/td[2]/button
     sleep  1s
-    input text  name:ITEM_PRICE  70
+    click element  xpath:/html/body/div[1]/div/div/div/div/div/a[1]
     sleep  1s
-    click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[6]/td[2]/button
+    input text  name:ITEM_PRICE  40
     sleep  1s
-    click element  xpath:/html/body/div/div/div/div/table/tbody/tr[2]/td[5]/a
+    input text  name:IMAGE  https://static.toiimg.com/thumb/54308405.cms?width=1200&height=900
     sleep  1s
-    click element  xpath:/html/body/div/div/div/div/table/tbody/tr[5]/td[2]/a
+    click button  xpath:/html/body/div[1]/div/div/div/form/table/tbody/tr[7]/td[2]/button
+    sleep  1s
+    click element  xpath:/html/body/div[1]/div/div/div[1]/div/div/a[2]
+    sleep  1s
+    click element  xpath:/html/body/div[1]/div/div/div/table/tbody/tr[5]/td[2]/a
     sleep  1s
     click element  xpath:/html/body/nav/div/div/ul/li[5]/a
-    sleep  1s
+    sleep  2s
     close browser
 
 3.User Registration
     [Documentation]  User Registeration details
     [Tags]  User Registeration
     open Browser  http://127.0.0.1:5000  chrome
-    maximize browser window
     sleep  2s
     click element  xpath:/html/body/div/div/div/div/form/span[2]/a
     sleep  2s
@@ -104,42 +108,24 @@ ${Go Back}  Execute Javascript history.back()
     sleep  2s
     click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
     sleep  2s
-    close browser
 
 5.Search Restaurant and placing order
      [Documentation]  Search Restaurant and order placing
      [Tags]  To search Restaurant and place order
-     open browser  http://127.0.0.1:5000/User  chrome
-     maximize browser window
-     input text  name:USER_EMAIL  akash@gmail.com
-     sleep  2s
-     input text  name:USER_PASSSWORD  12345
-     sleep  2s
-     click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
-     sleep  2s
      click element  xpath:/html/body/nav/div/div/ul/li[2]/a
      sleep  2s
-     click element  xpath:/html/body/div/div/div/div/table/tbody/tr[2]/td[5]/a
+     click element  xpath:/html/body/div[1]/div/div/div/table/tbody/tr[1]/td[5]/a
      sleep  2s
-     click element  xpath:/html/body/div/div/div/div/table/tbody/tr[1]/td[4]/a
+     click element  xpath:/html/body/div[1]/div/div/div[1]/div/div/a
      sleep  2s
      click element  xpath:/html/body/div/div/div/div/table/tbody/tr[5]/td[2]/a
      sleep  2s
      click element  xpath:/html/body/nav/div/div/ul/li[3]/a
-     sleep  4s
-     close browser
+     sleep  60s
 
 6.Order Status
      [Documentation]  Order Status in user
      [Tags]  to view status of order
-     open browser  http://127.0.0.1:5000/User  chrome
-     maximize browser window
-     input text  name:USER_EMAIL  akash@gmail.com
-     sleep  2s
-     input text  name:USER_PASSSWORD  12345
-     sleep  2s
-     click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
-     sleep  2s
      click element  xpath:/html/body/nav/div/div/ul/li[4]/a
      sleep  2s
      click element  xpath:/html/body/div/div/div/div/table/tbody/tr[1]/td[5]/a
@@ -154,9 +140,9 @@ ${Go Back}  Execute Javascript history.back()
      open Browser  http://127.0.0.1:5000/Restaurant  chrome
      maximize browser window
      sleep  2s
-     input text  name:NAME_OF_RESTAURANT  ${username}
+     input text  name:NAME_OF_RESTAURANT  Continental
      sleep  2s
-     input text  name:RESTAURANT_PASSWORD  ${password}
+     input text  name:RESTAURANT_PASSWORD  1234
      sleep  2s
      click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
      sleep  2s
@@ -212,7 +198,7 @@ ${Go Back}  Execute Javascript history.back()
     sleep  2s
     input text  name:DELIVERYBOY_PASSWORD  ${password2}
     sleep  2s
-    click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
+    click button  xpath:/html/body/div[1]/div/div/div/form/table/tbody/tr[5]/td[2]/button
     sleep  2s
     click element  xpath:/html/body/nav/div/div/ul/li[2]/a
     sleep  2s
@@ -229,15 +215,15 @@ ${Go Back}  Execute Javascript history.back()
     [Tags]  To view overall order status
      open browser  http://127.0.0.1:5000/User  chrome
      maximize browser window
-     input text  name:USER_EMAIL  akash@gmail.com
+     input text  name:USER_EMAIL  ${email}
      sleep  2s
-     input text  name:USER_PASSSWORD  12345
+     input text  name:USER_PASSSWORD  ${password1}
      sleep  2s
-     click button  xpath:/html/body/div/div/div/div/form/table/tbody/tr[5]/td[2]/button
+     click button  xpath:/html/body/div[1]/div/div/div/form/table/tbody/tr[5]/td[2]/button
      sleep  2s
      click element  xpath:/html/body/nav/div/div/ul/li[4]/a
      sleep  2s
-     click element  xpath:/html/body/div/div/div/div/table/tbody/tr[3]/td[5]/a
-     sleep  2s
+     click element  xpath:/html/body/div[1]/div/div/div/table/tbody/tr/td[5]/a
+     sleep  20s
      close browser
 *** Keywords ***
