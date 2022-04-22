@@ -13,47 +13,45 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <form action="/Restaurant-Registration" method="post">
+                <form action="/Restaurant-Update" method="post">
+                    {% for i in Item %}
                     <table class="table">
                       <tr>
                           <h1 class="Logo" style="color:#ff9800;">Foodex</h1>
                       </tr>
                       <tr>
-                        <h3>Restaurant Registration</h3>
+                        <h3>Restaurant Update</h3>
                       </tr>
                         <tr>
                             <td>Name</td>
-                            <td> <input type="text" name="NAME_OF_RESTAURANT" class="form-control"> </td>
+                            <td> <input type="text" name="NAME_OF_RESTAURANT" class="form-control" value="{{i[1]}}"> </td>
                         </tr>
                         <tr>
                             <td>Mobile Number</td>
-                            <td> <input type="text" name="MOBILE_NO" class="form-control"> </td>
+                            <td> <input type="text" name="MOBILE_NO" class="form-control" value="{{i[4]}}"> </td>
                         </tr>
                         <tr>
                             <td>Password</td>
-                            <td> <input type="password" name="RESTAURANT_PASSWORD" class="form-control"> </td>
+                            <td> <input type="password" name="RESTAURANT_PASSWORD" class="form-control" value="{{i[2]}}"> </td>
                         </tr>
                         <tr>
                             <td>Confirm Password</td>
-                            <td> <input type="password" name="Confirm_PASSWORD" class="form-control"> </td>
+                            <td> <input type="password" name="Confirm_PASSWORD" class="form-control" value="{{i[2]}}"> </td>
                         </tr>
                         <tr>
                             <td>Address</td>
-                            <td> <input type="text" name="ADDRESS" class="form-control"> </td>
+                            <td> <input type="text" name="ADDRESS" class="form-control" value="{{i[3]}}"> </td>
                         </tr>
                         <tr>
                             <td>Pincode</td>
-                            <td> <input type="number" name="Pincode" class="form-control"> </td>
+                            <td> <input type="number" name="Pincode" class="form-control" value="{{i[5]}}"> </td>
                         </tr>
                         <tr>
                             <td></td>
-                            <td><button type="submit" class="Submit-btn" style="background:#ff9800;">Register</button></td>
-                        </tr>
-                        <tr>
-                            <td></td>
-                            <td><a href="/Restaurant">Already have a account? Click here to Login</a></td>
+                            <td><button type="submit" class="Submit-btn" style="background:#ff9800;">Update</button></td>
                         </tr>
                     </table>
+                    {% endfor %}
                 </form>
             </div>
         </div>

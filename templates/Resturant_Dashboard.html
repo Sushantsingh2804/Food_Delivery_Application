@@ -50,9 +50,6 @@
                         <h3 class="Logo">
                            Resturant Service Dashboard</h3>
                       </tr>
-                        <tr>
-                            <img src="{{session.Image}}" alt="">
-                      </tr>
                       <tr>
                         <h4 class="Logo">
                             {% if session.name %}
@@ -61,6 +58,12 @@
                 Not Yet Login
                 {% endif %}</h4>
                       </tr>
+                        <tr>
+
+                            <div style="width: 100%; display: flex; justify-content: center; align-items: center;" >
+                                <a class="Edit-btn" style="background:#ff9800;" href="/Restaurant-Edit">Update</a>
+                            </div>
+                        </tr>
                     </table>
             </div>
         </div>

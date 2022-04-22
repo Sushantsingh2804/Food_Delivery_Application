@@ -19,8 +19,7 @@ else:
                         RESTAURANT_PASSWORD TEXT,
                         ADDRESS TEXT,
                         MOBILE_NO INTEGER,
-                        RESTAURANT_PIN TEXT,
-                        RESTAURANT_IMAGE TEXT
+                        RESTAURANT_PIN TEXT
                        )''')
 
     print("Table Created Successfully")
@@ -168,7 +167,6 @@ def app_login():
                 getid = i[0]
                 session["name"] = getname
                 session["id"] = getid
-                session["Image"] = i[6]
             return redirect("/Resturant-Dashboard")
     return render_template("Resturant_Login.html")
 
@@ -180,10 +178,9 @@ def restaurant_registration():
         getpassword = request.form["RESTAURANT_PASSWORD"]
         getaddress = request.form["ADDRESS"]
         getpincode = request.form["Pincode"]
-        getImage = request.form["IMAGE"]
         try:
-            connection.execute("insert into RESTAURANT(NAME_OF_RESTAURANT,RESTAURANT_PASSWORD,ADDRESS,MOBILE_NO,RESTAURANT_PIN,RESTAURANT_IMAGE)\
-                               values('" + getname + "','" + getpassword + "','" + getaddress + "'," + getphone + "," + getpincode + ",'" + getImage + "')")
+            connection.execute("insert into RESTAURANT(NAME_OF_RESTAURANT,RESTAURANT_PASSWORD,ADDRESS,MOBILE_NO,RESTAURANT_PIN)\
+                               values('" + getname + "','" + getpassword + "','" + getaddress + "'," + getphone + "," + getpincode + ")")
             connection.commit()
             print("Restaurant Data Added Successfully.")
         except Exception as e:
@@ -191,12 +188,44 @@ def restaurant_registration():
         return redirect("/Restaurant")
     return render_template("Resturant_Register.html")
 
+@app.route("/Restaurant-Edit")
+def Edit_Restaurant():
+    getid = str(session["id"])
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM RESTAURANT where RESTAURANT_ID="+str(getid))
+    result = cursor.fetchall()
+    return render_template("Resturant_Update.html", Item=result)
+
+@app.route("/Restaurant-Update", methods= ["GET", "POST"])
+def restaurant_update():
+    if request.method == "POST":
+        getid = str(session["id"])
+        getname = request.form["NAME_OF_RESTAURANT"]
+        getphone = request.form["MOBILE_NO"]
+        getpassword = request.form["RESTAURANT_PASSWORD"]
+        getaddress = request.form["ADDRESS"]
+        getpincode = request.form["Pincode"]
+        try:
+            connection.execute("update RESTAURANT SET NAME_OF_RESTAURANT='"+getname+"' ,RESTAURANT_PASSWORD='"+getpassword+"' ,ADDRESS='"+getaddress+"' ,MOBILE_NO='"+getphone+"' ,RESTAURANT_PIN="+getpincode+" where RESTAURANT_ID="+str(getid))
+            connection.commit()
+            print("Restaurant Data Added Successfully.")
+        except Exception as e:
+            print("Error occured ", e)
+        return redirect("/Resturant-Dashboard")
+    return render_template("Resturant_Update.html")
+
 @app.route("/Resturant-Dashboard")
 def Resturant_Dashboard():
-    if not session.get("name"):
-        return redirect("/")
-    else:
-        return render_template("Resturant_Dashboard.html")
+    getid = str(session["id"])
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM RESTAURANT where RESTAURANT_ID=" + str(getid))
+    result = cursor.fetchall()
+    for i in result:
+        getname = i[1]
+        getid = i[0]
+        session["name"] = getname
+        session["id"] = getid
+    return render_template("Resturant_Dashboard.html")
 
 @app.route("/Add-Item",methods = ["GET","POST"])
 def Add_Item():
@@ -321,11 +350,9 @@ def deliveryboy_registration():
             getphone = request.form["DELIVERYBOY_PHONE_NO"]
             getpassword = request.form["DELIVERYBOY_PASSWORD"]
             getaddress = request.form["ADDRESS"]
-            setwallet = '0'
-            setstatus = 'available'
 
-            connection.execute("insert into DELIVERYBOY(NAME_OF_DELIVERYBOY,DELIVERYBOY_PASSWORD,ADDRESS,DELIVERYBOY_STATUS,DELIVERYBOY_PHONE_NO,DELIVERYBOY_WALLET_BALANCE)\
-                               values('" + getname + "','" + getpassword + "','" + getaddress + "','" + setstatus + "'," + getphone + "," + setwallet + ")")
+            connection.execute("insert into DELIVERYBOY(NAME_OF_DELIVERYBOY,DELIVERYBOY_PASSWORD,ADDRESS,DELIVERYBOY_PHONE_NO)\
+                               values('" + getname + "','" + getpassword + "','" + getaddress + "'," + getphone + ")")
             connection.commit()
             print("Delivery Boy Data Added Successfully.")
         except Exception as e:
@@ -334,9 +361,44 @@ def deliveryboy_registration():
         return redirect("/Delivery")
     return render_template("DeliveryBoy_Register.html")
 
+@app.route("/Delivery-Edit")
+def Edit_Delivery():
+    getid = str(session["id"])
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM DELIVERYBOY where DELIVERYBOY_ID="+str(getid))
+    result = cursor.fetchall()
+    return render_template("DeliveryBoy_Update.html", Item=result)
+
+@app.route("/Delivery-Update", methods=["GET", "POST"])
+def deliveryboy_Update():
+    if request.method == "POST":
+        try:
+            getid = str(session["id"])
+            getname = request.form["NAME_OF_DELIVERYBOY"]
+            getphone = request.form["DELIVERYBOY_PHONE_NO"]
+            getpassword = request.form["DELIVERYBOY_PASSWORD"]
+            getaddress = request.form["ADDRESS"]
+            connection.execute("update DELIVERYBOY SET NAME_OF_DELIVERYBOY='"+getname+"' ,DELIVERYBOY_PASSWORD='"+getpassword+"' ,ADDRESS='"+getaddress+"' ,DELIVERYBOY_PHONE_NO='"+getphone+"' Where DELIVERYBOY_ID="+str(getid))
+            connection.commit()
+            print("Delivery Boy Data Updated Successfully.")
+        except Exception as e:
+            print("Error occured ", e)
+
+        return redirect("/Delivery-Dashboard")
+    return render_template("DeliveryBoy_Register.html")
+
 
 @app.route("/Delivery-Dashboard")
 def deliveryboy_Dashboard():
+    getid = str(session["id"])
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM DELIVERYBOY where DELIVERYBOY_ID=" + str(getid))
+    result = cursor.fetchall()
+    for i in result:
+        getname = i[1]
+        getid = i[0]
+        session["name"] = getname
+        session["id"] = getid
     return render_template("DeliveryBoy_Dashboard.html")
 
 @app.route("/Available-Orders")
@@ -437,12 +499,23 @@ def user_registration():
 
 @app.route("/User-Dashboard")
 def User_Dashboard():
+    getid= str(session["id"])
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM USER where USER_ID="+str(getid))
+    result = cursor.fetchall()
+    for i in result:
+        getname = i[1]
+        getemail = i[3]
+        getid = i[0]
+        session["name"] = getname
+        session["id"] = getid
+        session["email"] = getemail
     return render_template("User_Dashboard.html")
 
 @app.route("/View-Resturant")
 def User_View_Resturant():
     cursor = connection.cursor()
-    count = cursor.execute("select * from RESTAURANT")
+    cursor.execute("select * from RESTAURANT")
     result = cursor.fetchall()
     return render_template("View_Resturant.html", Resturant=result)
 
@@ -450,7 +523,7 @@ def User_View_Resturant():
 def view_menu_user():
     getid=request.args.get('id')
     cursor=connection.cursor()
-    count=cursor.execute("SELECT m.ITEM_ID,m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(getid)+"; ")
+    cursor.execute("SELECT m.ITEM_ID,m.ITEM_NAME,m.ITEM_CATEGORY,m.ITEM_PRICE,m.ITEM_IMAGE FROM MENU m LEFT JOIN RESTAURANT r ON m.RESTAURANT_ID = r.RESTAURANT_ID WHERE m.RESTAURANT_ID="+str(getid)+"; ")
     result=cursor.fetchall()
     return render_template("View_Menu_user.html",MENU=result,Res_id=getid)
 
@@ -568,6 +641,33 @@ def Success_Order():
         "SELECT order_id, order_amount, order_status,r.name_of_restaurant FROM ORDER_TABLE o JOIN RESTAURANT r on o.RESTAURANT_ID=r.RESTAURANT_ID WHERE o.USER_ID= " + getid)
     result = cursor.fetchall()
     return render_template("User_Order.html", Items=result)
+
+
+@app.route("/User-Edit")
+def Edit_User():
+    getid = str(session["id"])
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM USER where USER_ID="+str(getid))
+    result = cursor.fetchall()
+    return render_template("User_Update.html", Item=result)
+
+@app.route("/User-Update", methods=["GET", "POST"])
+def user_update():
+    if request.method == "POST":
+        getid = str(session["id"])
+        getname = request.form["USER_NAME"]
+        getemail = request.form["USER_EMAIL"]
+        getphone = request.form["USER_PHONE_NO"]
+        getpassword = request.form["USER_PASSWORD"]
+        getaddress = request.form["ADDRESS"]
+        getpincode = request.form["Pincode"]
+        try:
+            connection.execute("update USER set USER_NAME='"+getname+"',USER_PASSWORD='"+getpassword+"',USER_EMAIL='"+getemail+"',USER_PHONE_NO='"+getphone+"',USER_ADDRESS='"+getaddress+"',USER_PINCODE="+getpincode+" where USER_ID="+str(getid))
+            connection.commit()
+        except Exception as e:
+            print("Error occured ", e)
+        return redirect("/User-Dashboard")
+    return render_template("User_Registration.html")
 
 if __name__ == "__main__":
     app.run()

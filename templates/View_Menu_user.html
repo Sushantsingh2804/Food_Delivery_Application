@@ -38,34 +38,27 @@
   </div>
      </div>
 </nav>
-  <div class="ToCenter" >
-  <div class="container">
-        <div class="row">
-            <div class="col">
-                <table class="table">
-                    <thead>
-                      <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">Price</th>
 
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {% for i in MENU %}
-                      <tr>
-                        <td>{{i[1]}}</td>
-                          <td>{{i[2]}}</td>
-                          <td>{{i[3]}}</td>
-                            <td> <a class="Edit-btn" style="background:#2196f3;" href="/User-add-cart?id={{i[0]}}&res_id={{Res_id}}"> Add To Cart</a> </td>
-                      </tr>
-                      {% endfor %}
-                    </tbody>
-                  </table>
+  <div class="ToCenter">
+  <div class="container">
+      <div class="row">
+          {% for i in MENU %}
+          <div class="col-sm-3">
+            <div class="card" style="width: 18rem;">
+                <img class="rounded card-img-top" src="{{i[4]}}" alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Name: {{i[1]}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Category: {{i[2]}}</h6>
+                  <h6 class="card-subtitle mb-2 text-muted">Price: {{i[3]}}</h6>
+                  <a class="Edit-btn card-link" style="background:#2196f3;" href="/User-add-cart?id={{i[0]}}&res_id={{Res_id}}"> Add To Cart</a>
+              </div>
             </div>
+          </div>
+          {% endfor %}
         </div>
     </div>
     </div>
+
 <div class="area" >
           <ul class="circles">
                   <li></li>
